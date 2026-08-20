@@ -236,7 +236,7 @@ section { position: relative; z-index: 1; }
   border: 1px solid var(--gold-border);
   color: var(--gold-light);
   background: transparent;
-  padding: 14px 28px;
+  padding: 18px 32px;
 }
 .btn-outline:hover {
   background: var(--gold-glow);
@@ -1085,6 +1085,42 @@ nav {
   text-decoration: none;
 }
 .whatsapp-microcta a:hover { text-decoration: underline; }
+
+/* Par de CTAs: Hotmart + transferencia, mismo tamaño, uno al lado del otro */
+.cta-pair-label {
+  display: block;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--gray-500);
+  margin-bottom: 10px;
+}
+.cta-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.cta-pair .btn-gold,
+.cta-pair .btn-outline {
+  flex: 1 1 200px;
+  width: auto;
+  max-width: 320px;
+}
+
+@media (max-width: 600px) {
+  .cta-pair .btn-gold,
+  .cta-pair .btn-outline { flex-basis: 45%; padding: 16px 12px; font-size: 13.5px; }
+}
+@media (max-width: 380px) {
+  .cta-pair .btn-gold,
+  .cta-pair .btn-outline { font-size: 12.5px; padding: 14px 8px; }
+}
+
+/* Par compacto dentro de la sticky mobile */
+.sticky-pair { display: flex; gap: 8px; flex: 1; }
+.sticky-pair .btn-gold,
+.sticky-pair .btn-outline { flex: 1; }
+.sticky .btn-outline { padding: 14px 10px; font-size: 13px; }
 
 /* Botón flotante de WhatsApp — visible en todo momento del scroll */
 .whatsapp-float {
@@ -3029,14 +3065,19 @@ footer a:hover { color: var(--gray-300); }
       <p class="small" style="text-align:center;color:var(--gray-500);margin:0;padding:0 28px 20px">Empezá hoy mismo por menos de lo que cuestan unas pocas comidas rápidas.</p>
 
       <div class="offer-cta">
-       <a href="https://pay.hotmart.com/U106036733R?checkoutMode=10"
-  
+        <span class="cta-pair-label fade">Elegí cómo pagar:</span>
+        <div class="cta-pair fade">
+          <a href="https://pay.hotmart.com/U106036733R?checkoutMode=10"
    rel="noopener"
-   class="btn btn-gold btn-full"
+   class="btn btn-gold"
    id="main-cta"
    onclick="fbq('track', 'InitiateCheckout');">
-  Activar mi acceso al Método Neuroproductivo — $9.500
+  Activar mi acceso — $9.500
 </a>
+          <a href="https://wa.me/5493585741055?text=Hola!%20Quiero%20comprar%20el%20M%C3%A9todo%20Neuroproductivo%20por%20transferencia%20%E2%80%94%20%249.500%20ARS." target="_blank" rel="noopener" class="btn btn-outline" onclick="fbq('track', 'Contact', {content_name: 'transferencia_whatsapp'});">
+  Transferencia — sin impuestos
+</a>
+        </div>
         <div class="cta-microcopy">
           <span>🔒 Pago seguro con Hotmart</span>
           <span>⚡ Acceso inmediato</span>
@@ -3113,14 +3154,19 @@ footer a:hover { color: var(--gray-300); }
     </div>
 
     <div class="fade">
-     <a href="https://pay.hotmart.com/U106036733R?checkoutMode=10"
-  
+      <span class="cta-pair-label">Elegí cómo pagar:</span>
+      <div class="cta-pair" style="max-width:540px;margin:0 auto">
+       <a href="https://pay.hotmart.com/U106036733R?checkoutMode=10"
    rel="noopener"
    class="btn btn-gold"
-   style="max-width:480px;margin:0 auto;padding:20px 32px;font-size:16px"
+   style="padding:20px 28px;font-size:16px"
    onclick="fbq('track', 'InitiateCheckout');">
   Quiero empezar hoy — $9.500
 </a>
+        <a href="https://wa.me/5493585741055?text=Hola!%20Quiero%20comprar%20el%20M%C3%A9todo%20Neuroproductivo%20por%20transferencia%20%E2%80%94%20%249.500%20ARS." target="_blank" rel="noopener" class="btn btn-outline" style="padding:20px 28px;font-size:16px" onclick="fbq('track', 'Contact', {content_name: 'transferencia_whatsapp'});">
+  Transferencia — sin impuestos
+</a>
+      </div>
       <div class="cta-microcopy">
         <span>🔒 Pago seguro con Hotmart</span>
         <span>⚡ Acceso inmediato</span>
@@ -3153,13 +3199,17 @@ footer a:hover { color: var(--gray-300); }
     <div class="from">$46.200</div>
     <div class="now">$9.500</div>
   </div>
- <a href="https://pay.hotmart.com/U106036733R?checkoutMode=10"
-  
+  <div class="sticky-pair">
+   <a href="https://pay.hotmart.com/U106036733R?checkoutMode=10"
    rel="noopener"
    class="btn btn-gold"
    onclick="fbq('track', 'InitiateCheckout');">
-    Activar acceso — $9.500
+    Activar acceso
   </a>
+   <a href="https://wa.me/5493585741055?text=Hola!%20Quiero%20comprar%20el%20M%C3%A9todo%20Neuroproductivo%20por%20transferencia%20%E2%80%94%20%249.500%20ARS." target="_blank" rel="noopener" class="btn btn-outline" onclick="fbq('track', 'Contact', {content_name: 'transferencia_whatsapp'});">
+    Sin impuestos
+  </a>
+  </div>
 </div>
 
 <!-- WHATSAPP FLOTANTE — visible en todo momento del scroll, no solo al final -->
