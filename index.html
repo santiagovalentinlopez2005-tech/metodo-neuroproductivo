@@ -529,6 +529,118 @@ nav {
 }
 
 /* ══════════════════════════════════════════════
+   VSL
+══════════════════════════════════════════════ */
+.vsl-section {
+  padding: 80px 0;
+}
+
+.vsl-label {
+  font-size: 14px;
+  color: var(--gray-500);
+  font-style: italic;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.vsl-outer {
+  border: 1px solid var(--gold-border);
+  border-radius: var(--r-lg);
+  padding: 4px;
+  background: var(--black-3);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 60px rgba(201,151,58,0.06);
+  position: relative;
+}
+
+.vsl-outer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+  z-index: 1;
+}
+
+.vsl-inner {
+  background: var(--black-4);
+  border-radius: 13px;
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Blindaje: el embed real (vturb-smartplayer u otro) nunca debe
+   superar el ancho de su contenedor, sea cual sea el ancho fijo
+   que el script del proveedor intente aplicarle. */
+.vsl-inner > * {
+  max-width: 100%;
+}
+
+.vsl-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(201,151,58,0.05) 0%, transparent 65%);
+}
+
+.vsl-play {
+  width: 68px; height: 68px;
+  background: linear-gradient(135deg, #C9973A, #E0B86A);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 12px rgba(201,151,58,0.12), 0 0 0 24px rgba(201,151,58,0.05);
+  animation: pulse-play 2.5s ease infinite;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+}
+
+@keyframes pulse-play {
+  0%,100% { box-shadow: 0 0 0 12px rgba(201,151,58,0.12), 0 0 0 24px rgba(201,151,58,0.05); }
+  50% { box-shadow: 0 0 0 16px rgba(201,151,58,0.18), 0 0 0 32px rgba(201,151,58,0.07); }
+}
+
+.vsl-play-arrow {
+  width: 0; height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 20px solid #080808;
+  margin-left: 5px;
+}
+
+.vsl-vtext {
+  font-family: var(--font-h);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--gold-light);
+  letter-spacing: 0.04em;
+  text-align: center;
+  z-index: 1;
+}
+
+.vsl-vsub {
+  font-size: 12px;
+  color: var(--gray-500);
+  z-index: 1;
+}
+
+.vsl-below {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--gray-500);
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════════════
    BENEFITS
 ══════════════════════════════════════════════ */
 .benefits-grid {
@@ -1086,41 +1198,6 @@ nav {
 }
 .whatsapp-microcta a:hover { text-decoration: underline; }
 
-/* Par de CTAs: Hotmart + transferencia, mismo tamaño, uno al lado del otro */
-.cta-pair-label {
-  display: block;
-  text-align: center;
-  font-size: 12.5px;
-  color: var(--gray-500);
-  margin-bottom: 10px;
-}
-.cta-pair {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-}
-.cta-pair .btn-gold,
-.cta-pair .btn-outline {
-  flex: 1 1 200px;
-  width: auto;
-  max-width: 320px;
-}
-
-@media (max-width: 600px) {
-  .cta-pair .btn-gold,
-  .cta-pair .btn-outline { flex-basis: 45%; padding: 16px 12px; font-size: 13.5px; }
-}
-@media (max-width: 380px) {
-  .cta-pair .btn-gold,
-  .cta-pair .btn-outline { font-size: 12.5px; padding: 14px 8px; }
-}
-
-/* Par compacto dentro de la sticky mobile */
-.sticky-pair { display: flex; gap: 8px; flex: 1; }
-.sticky-pair .btn-gold,
-.sticky-pair .btn-outline { flex: 1; }
-.sticky .btn-outline { padding: 14px 10px; font-size: 13px; }
 
 /* Botón flotante de WhatsApp — visible en todo momento del scroll */
 .whatsapp-float {
@@ -1574,6 +1651,9 @@ footer a:hover { color: var(--gray-300); }
   /* Fix: urgency box h3 */
   .urgency-box h3 { font-size: 18px; }
 
+  /* Fix: vsl play button sizing */
+  .vsl-play { width: 56px; height: 56px; }
+
   /* Fix: stat block padding */
   .stat-block { padding: 28px 20px; }
 
@@ -1603,9 +1683,57 @@ footer a:hover { color: var(--gray-300); }
 
 /* ════════════════════════════════════════════════
    MOBILE VISUAL IMPACT — V6
+   Focused on: VSL dominance, image presence,
+   rhythm, padding optimization
 ════════════════════════════════════════════════ */
 
+/* ── VSL: Full-bleed wrapper breakout on mobile ── */
 @media (max-width: 600px) {
+
+  /* P1 + P2 + P8: VSL — full width, more height, dominant */
+  .vsl-section {
+    padding: 48px 0;
+  }
+
+  .vsl-section .wrap {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Nota: estas reglas asumían el viejo placeholder full-bleed
+     de .vsl-section (ya no existe). El video real ahora vive
+     dentro del hero y necesita mantener sus bordes redondeados,
+     su proporción 16:9 y sus márgenes laterales — no un recorte
+     edge-to-edge. */
+  .vsl-outer {
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 80px rgba(201,151,58,0.08);
+  }
+
+  .vsl-play {
+    width: 72px;
+    height: 72px;
+    box-shadow: 0 0 0 16px rgba(201,151,58,0.1), 0 0 0 32px rgba(201,151,58,0.05);
+  }
+
+  .vsl-vtext {
+    font-size: 17px;
+    letter-spacing: 0.06em;
+  }
+
+  .vsl-vsub {
+    font-size: 12px;
+  }
+
+  .vsl-label {
+    padding: 0 24px;
+    margin-bottom: 16px;
+  }
+
+  .vsl-below {
+    padding: 0 24px;
+    margin-top: 20px;
+    font-size: 14px;
+  }
 
   /* P3 + P7: Hero — tighter top, less wasted space */
   .hero {
@@ -1665,6 +1793,8 @@ footer a:hover { color: var(--gray-300); }
   .section-sm {
     padding: 48px 0;
   }
+
+  /* VSL-specific section — already set above to 48px */
 
   /* Hero image glow — reduce on mobile (less dramatic, uses GPU) */
   .hero-img-glow {
@@ -1918,6 +2048,20 @@ footer a:hover { color: var(--gray-300); }
    V8 — ORIGIN STORY, PHILOSOPHY & TRUST BLOCKS
 ════════════════════════════════════════════ */
 
+.origin-box {
+  background: var(--black-3);
+  border: 1px solid var(--border-md);
+  border-radius: var(--r-xl);
+  padding: 44px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.origin-box::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-border), transparent);
+}
+
 .philosophy-block {
   margin-top: 32px;
   padding-top: 28px;
@@ -2007,12 +2151,23 @@ footer a:hover { color: var(--gray-300); }
 
 @media (max-width: 600px) {
   .quality-grid { grid-template-columns: 1fr; }
+  .origin-box { padding: 32px 22px; }
   .nextstep-box { padding: 24px 20px; margin-bottom: 24px; }
 }
 
 /* ════════════════════════════════════════════
    V9 — REAL PRODUCT EVIDENCE CARDS + CTA MICROCOPY
 ════════════════════════════════════════════ */
+
+.origin-icon {
+  width: 52px; height: 52px;
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-border);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 22px;
+  box-shadow: 0 8px 24px var(--gold-glow);
+}
 
 .resource-grid {
   display: flex;
@@ -2144,7 +2299,7 @@ footer a:hover { color: var(--gray-300); }
    V10 — EARLY-PROOF TEASER, CARD LABELS, ASSURANCE BLOCK
 ════════════════════════════════════════════ */
 
-/* Early teaser */
+/* Early teaser (right after VSL) */
 .teaser-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -2261,6 +2416,40 @@ footer a:hover { color: var(--gray-300); }
   .assurance-title { font-size: 17px; }
 }
 
+/* Línea de confianza mínima debajo de la VSL */
+.hero-vsl-trust {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--gray-500);
+  text-align: center;
+  letter-spacing: .01em;
+}
+
+@media (max-width: 600px) {
+  .hero-vsl-trust { font-size: 12px; }
+}
+
+/* ══════════════════════════════════════════════
+   TEST DE NUEVA VSL — SISTEMA DE DESBLOQUEO
+   #offer-section arranca oculto con .offer-hidden.
+   El <script> antes de </body> le agrega .offer-visible
+   cuando el VSL llega al segundo OFFER_REVEAL_TIME.
+══════════════════════════════════════════════ */
+.offer-hidden {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease, max-height 0.8s ease;
+}
+
+.offer-visible {
+  opacity: 1;
+  max-height: 60000px; /* suficientemente alto para no recortar el contenido real */
+  overflow: visible;
+  transform: translateY(0);
+}
+
 </style>
 </head>
 <body>
@@ -2273,11 +2462,11 @@ footer a:hover { color: var(--gray-300); }
 
 <!-- =======================
      HERO
-     Eyebrow, headline y subheadline. Sin CTA ni precio todavía
-     — eso aparece más abajo, recién cuando se empieza a mostrar
-     el contenido incluido (sección "muestra del producto").
-     Toda la landing está visible desde el inicio, sin
-     bloqueos ni contenido oculto.
+     Eyebrow, headline y subheadline. Sin CTA ni precio todavía.
+     TEST DE NUEVA VSL: a partir de acá (Hero + Trust bar + VSL)
+     el resto de la página queda oculto dentro de #offer-section
+     hasta que el VSL llegue a OFFER_REVEAL_TIME (ver <script>
+     antes de </body>).
 ======================== -->
 <section class="hero">
   <div class="hero-glow"></div>
@@ -2290,7 +2479,7 @@ footer a:hover { color: var(--gray-300); }
     </h1>
 
     <p class="body-lg fade" style="transition-delay:.2s; max-width:540px; margin:22px auto 0;">
-      No te falta voluntad ni disciplina: hay un mecanismo cerebral específico que te hace posponerlo todo y perder horas en el celular. Te muestro exactamente cómo revertirlo en esta página.
+      No te falta voluntad ni disciplina: hay un mecanismo cerebral específico que te hace posponerlo todo y perder horas en el celular. Te lo explico en el video de esta página.
     </p>
   </div>
 </section>
@@ -2316,6 +2505,49 @@ footer a:hover { color: var(--gray-300); }
     </div>
   </div>
 </div>
+
+<!-- =======================
+     VSL
+     Video integrado dentro de la landing tradicional,
+     visible desde el inicio junto con el resto del contenido.
+======================== -->
+<section class="section-sm">
+  <div class="wrap">
+    <div class="section-head section-center fade">
+      <span class="section-eyebrow">Antes de seguir</span>
+      <h2 class="h2">El mecanismo que te hace<br>postergarlo todo — explicado.</h2>
+      <p class="body" style="margin-top:12px;max-width:460px;margin-left:auto;margin-right:auto">Menos de 10 minutos para entender por qué ninguna técnica te funcionó hasta ahora — y qué hacer distinto.</p>
+    </div>
+
+    <div class="vsl-outer fade">
+      <div class="vsl-inner">
+
+<vturb-smartplayer id="vid-6a90697fc5848b2375869d7a" style="display: block; margin: 0 auto; width: 100%; "><div class="vturb-player-placeholder" style="position: relative; width: 100%; padding: 52.785923753665685% 0 0; z-index: 0; background-color: black;"></div></vturb-smartplayer>
+
+<script type="text/javascript">
+var s=document.createElement("script");
+s.src="https://scripts.converteai.net/f4d07dba-7f99-4f29-be78-5e47ac025a4c/players/6a90697fc5848b2375869d7a/v4/player.js";
+s.async=!0;
+document.head.appendChild(s);
+</script>
+
+      </div>
+    </div>
+
+    <p class="hero-vsl-trust fade">🔒 Acceso inmediato &nbsp;·&nbsp; 🧠 Método paso a paso &nbsp;·&nbsp; 📱 Soporte por WhatsApp</p>
+  </div>
+</section>
+
+<!-- =======================
+     OFFER SECTION (OCULTO HASTA EL MOMENTO DE OFERTA DEL VSL)
+     Todo lo que sigue (identificación, agitación, solución,
+     muestra de producto, qué incluye, oferta, precio, bonos,
+     garantía, WhatsApp y CTA final) empieza oculto vía
+     .offer-hidden y se revela agregando .offer-visible
+     cuando el VSL llega a OFFER_REVEAL_TIME (ver <script>
+     antes de </body>). Test de la nueva VSL — versión "vid-6a90697fc5848b2375869d7a".
+======================== -->
+<section id="offer-section" class="offer-hidden">
 
 <!-- ═══════════════════════════════════════
      IDENTIFICACIÓN
@@ -2392,37 +2624,6 @@ footer a:hover { color: var(--gray-300); }
       <h2 class="h2" style="margin:20px 0 18px">Existe una razón por la que<br><span class="gold">fallaste antes.</span></h2>
       <p class="body-lg">Tu procrastinación no es un problema de disciplina. Es un problema de <strong style="color:var(--white)">dopamina</strong>. De circuito de recompensa desregulado. De norepinefrina baja en el momento de empezar.</p>
       <p class="body-lg" style="margin-top:16px">El Método Neuroproductivo te explica exactamente qué pasa en tu cerebro cuando postergás — y te da el protocolo completo, las herramientas de seguimiento y los recursos para revertirlo en 14 días.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════
-     EL MECANISMO, PASO A PASO
-═══════════════════════════════════════ -->
-<section class="section">
-  <div class="wrap">
-    <div class="section-head fade">
-      <span class="section-eyebrow">El mecanismo, paso a paso</span>
-      <h2 class="h2">Así te sabotea tu cerebro<br>cuando tenés que empezar.</h2>
-    </div>
-
-    <div class="identify-list">
-      <div class="identify-card fade">
-        <div class="identify-line"></div>
-        <p><strong>1. Tu cerebro busca la recompensa más rápida.</strong> El celular, las redes y las tareas fáciles liberan dopamina en segundos. Una tarea importante recién la libera cuando la terminás — minutos u horas después. Frente a esa diferencia, tu cerebro elige lo inmediato. No por debilidad: por diseño.</p>
-      </div>
-      <div class="identify-card fade">
-        <div class="identify-line"></div>
-        <p><strong>2. Por eso el Pomodoro o "más fuerza de voluntad" no alcanzan.</strong> Esas técnicas te piden resistir el impulso a pura autodisciplina — pero el autocontrol es un recurso limitado que se agota en el día. No cambian el mecanismo, solo lo pelean cuerpo a cuerpo.</p>
-      </div>
-      <div class="identify-card fade">
-        <div class="identify-line"></div>
-        <p><strong>3. Lo que sí cambia el mecanismo: bajar la fricción de empezar.</strong> Cuando el primer paso es específico, medible y sin ambigüedad — no "sé más productivo", sino "activá esto, ahora" — tu cerebro deja de necesitar fuerza de voluntad para arrancar.</p>
-      </div>
-      <div class="identify-card fade">
-        <div class="identify-line"></div>
-        <p><strong>4. Eso es exactamente lo que hace el Sistema Diario de Ejecución.</strong> Convierte "tengo que ser productivo" en una acción concreta para hoy, y elimina la decisión que —muchas veces— es el verdadero obstáculo.</p>
-      </div>
     </div>
   </div>
 </section>
@@ -2506,6 +2707,34 @@ footer a:hover { color: var(--gray-300); }
         <span class="benefit-number">06</span>
         <div class="benefit-title">Recuperás la imagen de vos mismo</div>
         <p class="body">Dejar de postergarlo todo cambia cómo te ves a vos mismo. El sistema no solo te hace más productivo — te devuelve el control sobre tu vida.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CÓMO NACIÓ EL MÉTODO
+═══════════════════════════════════════ -->
+<section class="section-sm">
+  <div class="wrap">
+    <div class="section-head section-center fade">
+      <span class="section-eyebrow">El origen del sistema</span>
+      <h2 class="h2">¿Cómo nació el<br>Método Neuroproductivo?</h2>
+    </div>
+
+    <div class="origin-box fade">
+      <div class="origin-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E0B86A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg></div>
+      <p class="body-lg" style="text-align:center;max-width:540px;margin:0 auto">El Método Neuroproductivo nació de una pregunta simple: ¿por qué la mayoría de las personas que intentan mejorar su productividad abandonan el intento a las pocas semanas? La respuesta casi nunca tiene que ver con falta de voluntad — tiene que ver con sistemas pensados para funcionar en la teoría, no en la vida real de alguien con trabajo, estudio y una atención constantemente disputada por el celular.</p>
+      <p class="body" style="margin-top:18px;text-align:center;max-width:540px;margin-left:auto;margin-right:auto">La mayoría de los métodos de productividad fallan porque piden cambios extremos desde el primer día: rutinas rígidas, fuerza de voluntad constante, cero margen de error. Apenas se rompe la racha, la persona no abandona un hábito — abandona todo el sistema. El Método Neuroproductivo se diseñó evitando ese error a propósito.</p>
+      <p class="body" style="margin-top:14px;text-align:center;max-width:540px;margin-left:auto;margin-right:auto">En lugar de inventar teorías nuevas, reúne principios ampliamente documentados sobre formación de hábitos, organización del tiempo y regulación de la atención — traducidos en un protocolo simple de aplicar incluso en los días de poca energía. No promete resultados mágicos: ofrece una estructura clara para sostener el progreso, día a día.</p>
+
+      <div class="philosophy-block">
+        <div class="philosophy-label">Nuestra filosofía</div>
+        <div class="philosophy-list">
+          <div class="philosophy-item"><span class="philosophy-check">✔</span>No creemos en depender de la motivación. Creemos en sistemas que funcionan incluso en los días en que no tenés ganas.</div>
+          <div class="philosophy-item"><span class="philosophy-check">✔</span>Creemos en construir sistemas simples. Cuanto más simple el sistema, más fácil sostenerlo en el tiempo.</div>
+          <div class="philosophy-item"><span class="philosophy-check">✔</span>Preferimos pequeñas acciones sostenibles antes que cambios extremos que duran una semana y después se abandonan.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -2848,7 +3077,7 @@ footer a:hover { color: var(--gray-300); }
           <span class="faq-chev">▾</span>
         </button>
         <div class="faq-a">
-          <p class="faq-a-inner">Procesás el pago de forma segura a través de Hotmart. En cuanto se confirme, recibís acceso inmediato y automático a todos los materiales. Sin esperas, sin pasos adicionales.</p>
+          <p class="faq-a-inner">Hacés la transferencia con los datos que te mostramos en la página de pago y nos enviás el comprobante por WhatsApp. En cuanto lo verificamos, te enviamos el acceso a todos los materiales.</p>
         </div>
       </div>
       <div class="faq-item fade">
@@ -2857,7 +3086,7 @@ footer a:hover { color: var(--gray-300); }
           <span class="faq-chev">▾</span>
         </button>
         <div class="faq-a">
-          <p class="faq-a-inner">Tenés 7 días para probarlo. Si sentís que el sistema no es para vos, solicitás el reembolso directamente desde tu cuenta de Hotmart y recuperás el 100% de tu dinero. El proceso es simple y está gestionado por la plataforma.</p>
+          <p class="faq-a-inner">Tenés 7 días para probarlo. Si sentís que el sistema no es para vos, nos escribís por WhatsApp y te devolvemos el 100% de tu dinero por el mismo medio en que hiciste la transferencia.</p>
         </div>
       </div>
       <div class="faq-item fade">
@@ -2898,16 +3127,6 @@ footer a:hover { color: var(--gray-300); }
       <div class="author-monogram"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E0B86A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
       <p class="body-lg" style="text-align:center;max-width:520px;margin:0 auto">Durante años intenté resolver mi procrastinación con las mismas técnicas que todos recomiendan. Pomodoro, escritura de diario, bloqueo de apps, planificadores detallados. Ninguna funcionó de forma sostenida — hasta que entendí el mecanismo real detrás del problema.</p>
       <p class="body" style="margin-top:16px;text-align:center;max-width:520px;margin:16px auto 0">El Método Neuroproductivo es el sistema que construí a partir de esa investigación, para mi propio uso. Lo comparto porque creo que mucha gente está exactamente donde yo estuve — sin que nadie le haya explicado por qué le cuesta tanto empezar.</p>
-
-      <div class="philosophy-block">
-        <div class="philosophy-label">Nuestra filosofía</div>
-        <div class="philosophy-list">
-          <div class="philosophy-item"><span class="philosophy-check">✔</span>No creemos en depender de la motivación. Creemos en sistemas que funcionan incluso en los días en que no tenés ganas.</div>
-          <div class="philosophy-item"><span class="philosophy-check">✔</span>Creemos en construir sistemas simples. Cuanto más simple el sistema, más fácil sostenerlo en el tiempo.</div>
-          <div class="philosophy-item"><span class="philosophy-check">✔</span>Preferimos pequeñas acciones sostenibles antes que cambios extremos que duran una semana y después se abandonan.</div>
-        </div>
-      </div>
-
       <blockquote style="max-width:480px;margin:20px auto 0">"No creé esto para vender un curso más. Lo creé porque entender el porqué me cambió la forma de trabajar — y quiero que te pase lo mismo."</blockquote>
     </div>
   </div>
@@ -3002,7 +3221,7 @@ footer a:hover { color: var(--gray-300); }
     <div class="offer-box fade">
       <div class="offer-header">
         <h3 class="h3">Método Neuroproductivo<br><span class="gold">Sistema Completo</span></h3>
-        <p class="small" style="margin-top:8px;color:var(--gray-300)">8 recursos · Acceso de por vida · Entrega automática vía Hotmart</p>
+        <p class="small" style="margin-top:8px;color:var(--gray-300)">8 recursos · Acceso de por vida · Entrega tras verificar el pago</p>
       </div>
 
       <!-- OFFER IMAGE — full bundle spread -->
@@ -3045,7 +3264,7 @@ footer a:hover { color: var(--gray-300); }
           <div class="offer-price-col" style="color:var(--gold-light)">$4.400</div>
         </div>
         <div class="offer-row">
-          <div class="offer-row-left"><span class="offer-check">✓</span> Garantía de 7 días — reembolso desde Hotmart</div>
+          <div class="offer-row-left"><span class="offer-check">✓</span> Garantía de 7 días — reembolso por transferencia</div>
           <div class="offer-price-col" style="color:var(--green)">Sin riesgo</div>
         </div>
       </div>
@@ -3065,21 +3284,14 @@ footer a:hover { color: var(--gray-300); }
       <p class="small" style="text-align:center;color:var(--gray-500);margin:0;padding:0 28px 20px">Empezá hoy mismo por menos de lo que cuestan unas pocas comidas rápidas.</p>
 
       <div class="offer-cta">
-        <span class="cta-pair-label fade">Elegí cómo pagar:</span>
-        <div class="cta-pair fade">
-          <a href="https://pay.hotmart.com/U106036733R?checkoutMode=10"
-   rel="noopener"
-   class="btn btn-gold"
+        <a href="pago.html"
+   class="btn btn-gold btn-full"
    id="main-cta"
    onclick="fbq('track', 'InitiateCheckout');">
   Activar mi acceso — $9.500
 </a>
-          <a href="https://wa.me/5493585741055?text=Hola!%20Quiero%20comprar%20el%20M%C3%A9todo%20Neuroproductivo%20por%20transferencia%20%E2%80%94%20%249.500%20ARS." target="_blank" rel="noopener" class="btn btn-outline" onclick="fbq('track', 'Contact', {content_name: 'transferencia_whatsapp'});">
-  Transferencia — sin impuestos
-</a>
-        </div>
         <div class="cta-microcopy">
-          <span>🔒 Pago seguro con Hotmart</span>
+          <span>🔒 Pago por transferencia bancaria</span>
           <span>⚡ Acceso inmediato</span>
           <span>↩ Garantía de 7 días</span>
         </div>
@@ -3098,7 +3310,7 @@ footer a:hover { color: var(--gray-300); }
       <div class="guarantee-shield">🛡</div>
       <h3 class="guarantee-title">Garantía de 7 días</h3>
       <p class="body-lg" style="max-width:460px;margin:0 auto 10px;color:var(--green);font-weight:500">Podés probar el sistema completo sin ningún riesgo.</p>
-      <p class="body-lg" style="max-width:460px;margin:0 auto 16px">Si dentro de los primeros 7 días sentís que el Método Neuroproductivo no es para vos, solicitás el reembolso directamente desde tu cuenta de Hotmart y recuperás el 100% de tu dinero.</p>
+      <p class="body-lg" style="max-width:460px;margin:0 auto 16px">Si dentro de los primeros 7 días sentís que el Método Neuroproductivo no es para vos, nos escribís por WhatsApp y te devolvemos el 100% de tu dinero por el mismo medio en que hiciste la transferencia.</p>
       <p class="small" style="color:var(--gray-500)">Sin formularios. Sin burocracia. El riesgo es cero — el costo de no intentarlo es mucho mayor.</p>
       <p class="small" style="margin-top:10px;color:var(--gray-300)">Tu única decisión hoy es probarlo. Si en 7 días no le encontrás valor, pedís que te devuelvan los $9.500 — sin preguntas.</p>
     </div>
@@ -3154,21 +3366,14 @@ footer a:hover { color: var(--gray-300); }
     </div>
 
     <div class="fade">
-      <span class="cta-pair-label">Elegí cómo pagar:</span>
-      <div class="cta-pair" style="max-width:540px;margin:0 auto">
-       <a href="https://pay.hotmart.com/U106036733R?checkoutMode=10"
-   rel="noopener"
+     <a href="pago.html"
    class="btn btn-gold"
-   style="padding:20px 28px;font-size:16px"
+   style="max-width:480px;margin:0 auto;padding:20px 32px;font-size:16px"
    onclick="fbq('track', 'InitiateCheckout');">
   Quiero empezar hoy — $9.500
 </a>
-        <a href="https://wa.me/5493585741055?text=Hola!%20Quiero%20comprar%20el%20M%C3%A9todo%20Neuroproductivo%20por%20transferencia%20%E2%80%94%20%249.500%20ARS." target="_blank" rel="noopener" class="btn btn-outline" style="padding:20px 28px;font-size:16px" onclick="fbq('track', 'Contact', {content_name: 'transferencia_whatsapp'});">
-  Transferencia — sin impuestos
-</a>
-      </div>
       <div class="cta-microcopy">
-        <span>🔒 Pago seguro con Hotmart</span>
+        <span>🔒 Pago por transferencia bancaria</span>
         <span>⚡ Acceso inmediato</span>
         <span>↩ Garantía de 7 días</span>
       </div>
@@ -3188,28 +3393,24 @@ footer a:hover { color: var(--gray-300); }
   </div>
 </section>
 
+</section><!-- /#offer-section -->
+
 <!-- FOOTER -->
 <footer>
   <p>© Método Neuroproductivo &nbsp;·&nbsp; <a href="#">Contacto</a> &nbsp;·&nbsp; <a href="#">Política de privacidad</a> &nbsp;·&nbsp; <a href="#">Términos</a></p>
 </footer>
 
-<!-- STICKY MOBILE CTA — se muestra recién al llegar a "Visualización" (antes/después) (ver <script> antes de </body>) -->
+<!-- STICKY MOBILE CTA — oculto hasta que se desbloquea la oferta con el VSL (ver <script> antes de </body>) -->
 <div class="sticky" id="stk" style="display:none">
   <div class="sticky-price">
     <div class="from">$46.200</div>
     <div class="now">$9.500</div>
   </div>
-  <div class="sticky-pair">
-   <a href="https://pay.hotmart.com/U106036733R?checkoutMode=10"
-   rel="noopener"
+ <a href="pago.html"
    class="btn btn-gold"
    onclick="fbq('track', 'InitiateCheckout');">
-    Activar acceso
+    Activar acceso — $9.500
   </a>
-   <a href="https://wa.me/5493585741055?text=Hola!%20Quiero%20comprar%20el%20M%C3%A9todo%20Neuroproductivo%20por%20transferencia%20%E2%80%94%20%249.500%20ARS." target="_blank" rel="noopener" class="btn btn-outline" onclick="fbq('track', 'Contact', {content_name: 'transferencia_whatsapp'});">
-    Sin impuestos
-  </a>
-  </div>
 </div>
 
 <!-- WHATSAPP FLOTANTE — visible en todo momento del scroll, no solo al final -->
@@ -3238,18 +3439,75 @@ function toggleFaq(btn) {
 
 // ── COUNTDOWN removed — replaced with static launch pricing message ──
 
-// ── STICKY CTA ──
-// El primer CTA de la página no aparece hasta la sección
-// "Tu vida sin el método vs. con el método" (Visualización) — todo
-// lo anterior (hero, identificación, mecanismo, muestra, beneficios,
-// qué incluye) queda sin botón de compra. Se oculta de nuevo si el
-// usuario vuelve arriba de ese punto.
-const stk = document.getElementById('stk');
-const stickyTrigger = document.querySelector('.vision-img');
+// ══════════════════════════════════════════════════════════
+// TEST DE NUEVA VSL — DESBLOQUEO DE OFERTA
+// ══════════════════════════════════════════════════════════
+// Configurado para revelar la oferta en el minuto 3:25 del VSL.
+const OFFER_REVEAL_TIME = 205; // 3:25
 
+const offerSection = document.getElementById('offer-section');
+const stk = document.getElementById('stk');
+let offerUnlocked = false;
+
+function unlockOffer() {
+  if (offerUnlocked) return;
+  offerUnlocked = true;
+  offerSection.classList.remove('offer-hidden');
+  offerSection.classList.add('offer-visible');
+  // Anima de inmediato los elementos .fade que ya estén en pantalla
+  offerSection.querySelectorAll('.fade').forEach(el => el.classList.add('in'));
+}
+
+// ── Integración con VTurb ──
+// VTurb (Converteai) puede exponer el progreso del video de más de
+// una forma según la versión del script del player. Dejamos 3 vías
+// de conexión; alguna de ellas debería disparar unlockOffer():
+const vturbPlayerId = 'vid-6a90697fc5848b2375869d7a';
+
+// 1) Evento nativo del player, si tu versión de VTurb lo emite.
+document.addEventListener('vturb:timeupdate', (e) => {
+  if (e.detail && typeof e.detail.currentTime === 'number' && e.detail.currentTime >= OFFER_REVEAL_TIME) {
+    unlockOffer();
+  }
+});
+
+// 2) Polling: si el elemento <vturb-smartplayer> expone currentTime
+//    (directamente o vía player.player.currentTime), lo chequeamos
+//    cada segundo.
+const vturbPoll = setInterval(() => {
+  const player = document.getElementById(vturbPlayerId);
+  const currentTime = player && (player.currentTime ?? (player.player && player.player.currentTime));
+  if (typeof currentTime === 'number' && currentTime >= OFFER_REVEAL_TIME) {
+    unlockOffer();
+    clearInterval(vturbPoll);
+  }
+}, 1000);
+
+// 3) Fallback manual: si no se puede leer el tiempo real del player,
+//    contamos desde que el usuario le da play (primer click sobre
+//    el reproductor). Asume reproducción lineal, sin saltos.
+document.querySelectorAll('.vsl-inner').forEach((vslInner) => {
+  vslInner.addEventListener('click', function startManualTimer() {
+    if (offerUnlocked) return;
+    let elapsed = 0;
+    const manualTimer = setInterval(() => {
+      elapsed++;
+      if (elapsed >= OFFER_REVEAL_TIME || offerUnlocked) {
+        unlockOffer();
+        clearInterval(manualTimer);
+      }
+    }, 1000);
+  }, { once: true });
+});
+
+// ── STICKY CTA ──
+// Permanece oculto hasta que se desbloquea la oferta con el VSL.
+// Una vez desbloqueada, se muestra al hacer scroll cerca de los recursos.
 window.addEventListener('scroll', () => {
-  if (!stickyTrigger) return;
-  const rect = stickyTrigger.getBoundingClientRect();
+  if (!offerUnlocked) { stk.style.display = 'none'; return; }
+  const trigger = document.querySelector('.teaser-grid');
+  if (!trigger) { stk.style.display = 'flex'; return; }
+  const rect = trigger.getBoundingClientRect();
 
   if (rect.top <= window.innerHeight * 0.7) {
     stk.style.display = 'flex';
