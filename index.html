@@ -3287,7 +3287,7 @@ document.head.appendChild(s);
         <a href="pago.html"
    class="btn btn-gold btn-full"
    id="main-cta"
-   onclick="fbq('track', 'InitiateCheckout');">
+   onclick="return handleCtaClick(event, this);">
   Activar mi acceso — $9.500
 </a>
         <div class="cta-microcopy">
@@ -3369,7 +3369,7 @@ document.head.appendChild(s);
      <a href="pago.html"
    class="btn btn-gold"
    style="max-width:480px;margin:0 auto;padding:20px 32px;font-size:16px"
-   onclick="fbq('track', 'InitiateCheckout');">
+   onclick="return handleCtaClick(event, this);">
   Quiero empezar hoy — $9.500
 </a>
       <div class="cta-microcopy">
@@ -3408,7 +3408,7 @@ document.head.appendChild(s);
   </div>
  <a href="pago.html"
    class="btn btn-gold"
-   onclick="fbq('track', 'InitiateCheckout');">
+   onclick="return handleCtaClick(event, this);">
     Activar acceso — $9.500
   </a>
 </div>
@@ -3419,6 +3419,21 @@ document.head.appendChild(s);
 </a>
 
 <script>
+// ── CLICK EN CTA DE COMPRA ──
+// Los botones de compra navegan en la misma pestaña (no target="_blank",
+// a propósito, para evitar fricción con el navegador in-app de Instagram/
+// Facebook). Eso significa que la página empieza a abandonarse casi al
+// instante del click, y la petición de red del pixel de Meta puede
+// cancelarse antes de completarse. Por eso interceptamos el click,
+// disparamos el evento, y demoramos la navegación ~200ms — invisible
+// para la persona, pero le da tiempo a la petición a Meta de salir.
+function handleCtaClick(event, link) {
+  event.preventDefault();
+  if (typeof fbq === 'function') { fbq('track', 'InitiateCheckout'); }
+  setTimeout(() => { window.location.href = link.href; }, 200);
+  return false;
+}
+
 // ── FADE ON SCROLL ──
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
