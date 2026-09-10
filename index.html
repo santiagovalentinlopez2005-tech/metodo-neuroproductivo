@@ -544,27 +544,16 @@ nav {
 }
 
 .vsl-outer {
-  border: 1px solid var(--gold-border);
+  border: none;
   border-radius: var(--r-lg);
-  padding: 4px;
-  background: var(--black-3);
-  box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 60px rgba(201,151,58,0.06);
+  padding: 0;
+  background: transparent;
   position: relative;
 }
 
-.vsl-outer::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  border-radius: var(--r-lg) var(--r-lg) 0 0;
-  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
-  z-index: 1;
-}
-
 .vsl-inner {
-  background: var(--black-4);
-  border-radius: 13px;
+  background: var(--black);
+  border-radius: var(--r-lg);
   aspect-ratio: 16/9;
   display: flex;
   flex-direction: column;
@@ -1810,10 +1799,6 @@ footer a:hover { color: var(--gray-300); }
      dentro del hero y necesita mantener sus bordes redondeados,
      su proporción 16:9 y sus márgenes laterales — no un recorte
      edge-to-edge. */
-  .vsl-outer {
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 80px rgba(201,151,58,0.08);
-  }
-
   .vsl-play {
     width: 72px;
     height: 72px;
@@ -2536,26 +2521,6 @@ footer a:hover { color: var(--gray-300); }
   .hero-vsl-trust { font-size: 12px; }
 }
 
-/* ══════════════════════════════════════════════
-   TEST DE NUEVA VSL — SISTEMA DE DESBLOQUEO
-   #offer-section arranca oculto con .offer-hidden.
-   El <script> antes de </body> le agrega .offer-visible
-   cuando el VSL llega al segundo OFFER_REVEAL_TIME.
-══════════════════════════════════════════════ */
-.offer-hidden {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transform: translateY(40px);
-  transition: opacity 0.8s ease, transform 0.8s ease, max-height 0.8s ease;
-}
-
-.offer-visible {
-  opacity: 1;
-  max-height: 60000px; /* suficientemente alto para no recortar el contenido real */
-  overflow: visible;
-  transform: translateY(0);
-}
 
 </style>
 </head>
@@ -2574,10 +2539,9 @@ footer a:hover { color: var(--gray-300); }
      de por medio, para que en mobile el reproductor quede
      visible con el mínimo scroll posible y la gente le dé play
      antes de rebotar. El Trust Bar se movió a después del video.
-     TEST DE NUEVA VSL: a partir de acá (Hero + VSL) el resto de
-     la página queda oculto dentro de #offer-section hasta que
-     el VSL llegue a OFFER_REVEAL_TIME (ver <script> antes de
-     </body>).
+     La VSL se ve y se puede reproducir apenas se entra a la
+     landing, y el resto de la página (debajo del Trust Bar)
+     está visible de una, sin ningún tipo de espera ni bloqueo.
 ======================== -->
 <section class="hero">
   <div class="hero-glow"></div>
@@ -2596,11 +2560,11 @@ footer a:hover { color: var(--gray-300); }
     <div class="vsl-outer fade" style="margin-top:28px;transition-delay:.3s">
       <div class="vsl-inner">
 
-<vturb-smartplayer id="vid-6a90697fc5848b2375869d7a" style="display: block; margin: 0 auto; width: 100%; "><div class="vturb-player-placeholder" style="position: relative; width: 100%; padding: 52.785923753665685% 0 0; z-index: 0; background-color: black;"></div></vturb-smartplayer>
+<vturb-smartplayer id="vid-6aa1fb641a72feb1edd26db9" style="display: block; margin: 0 auto; width: 100%; "><div class="vturb-player-placeholder" style="position: relative; width: 100%; padding: 52.785923753665685% 0 0; z-index: 0; background-color: black;"></div></vturb-smartplayer>
 
 <script type="text/javascript">
 var s=document.createElement("script");
-s.src="https://scripts.converteai.net/f4d07dba-7f99-4f29-be78-5e47ac025a4c/players/6a90697fc5848b2375869d7a/v4/player.js";
+s.src="https://scripts.converteai.net/f4d07dba-7f99-4f29-be78-5e47ac025a4c/players/6aa1fb641a72feb1edd26db9/v4/player.js";
 s.async=!0;
 document.head.appendChild(s);
 </script>
@@ -2635,15 +2599,12 @@ document.head.appendChild(s);
 </div>
 
 <!-- =======================
-     OFFER SECTION (OCULTO HASTA EL MOMENTO DE OFERTA DEL VSL)
-     Todo lo que sigue (identificación, agitación, solución,
-     muestra de producto, qué incluye, oferta, precio, bonos,
-     garantía, WhatsApp y CTA final) empieza oculto vía
-     .offer-hidden y se revela agregando .offer-visible
-     cuando el VSL llega a OFFER_REVEAL_TIME (ver <script>
-     antes de </body>). Test de la nueva VSL — versión "vid-6a90697fc5848b2375869d7a".
+     OFFER SECTION
+     Identificación, agitación, solución, muestra de producto,
+     qué incluye, oferta, precio, bonos, garantía, WhatsApp
+     y CTA final. Landing totalmente abierta desde el ingreso,
+     visible junto con el VSL sin ningún tipo de espera.
 ======================== -->
-<section id="offer-section" class="offer-hidden">
 
 <!-- ═══════════════════════════════════════
      IDENTIFICACIÓN
@@ -3209,7 +3170,7 @@ document.head.appendChild(s);
           <span class="faq-chev">▾</span>
         </button>
         <div class="faq-a">
-          <p class="faq-a-inner">Hacés la transferencia con los datos que te mostramos en la página de pago y nos enviás el comprobante por WhatsApp. En cuanto lo verificamos, te enviamos el acceso a todos los materiales.</p>
+          <p class="faq-a-inner">Pagás con Mercado Pago o con tarjeta desde el checkout, y recibís el acceso a todos los materiales por mail apenas se confirma el pago. Importante: revisá también la carpeta de <strong>spam / correo no deseado</strong>, porque a veces llega ahí.</p>
         </div>
       </div>
       <div class="faq-item fade">
@@ -3218,7 +3179,7 @@ document.head.appendChild(s);
           <span class="faq-chev">▾</span>
         </button>
         <div class="faq-a">
-          <p class="faq-a-inner">Tenés 7 días para probarlo. Si sentís que el sistema no es para vos, nos escribís por WhatsApp y te devolvemos el 100% de tu dinero por el mismo medio en que hiciste la transferencia.</p>
+          <p class="faq-a-inner">Tenés 7 días para probarlo. Si sentís que el sistema no es para vos, nos escribís por WhatsApp y gestionamos el reembolso del 100% de tu dinero al mismo medio de pago que usaste.</p>
         </div>
       </div>
       <div class="faq-item fade">
@@ -3406,7 +3367,7 @@ document.head.appendChild(s);
     <div class="offer-box fade">
       <div class="offer-header">
         <h3 class="h3">Método Neuroproductivo<br><span class="gold">Sistema Completo</span></h3>
-        <p class="small" style="margin-top:8px;color:var(--gray-300)">8 recursos · Acceso de por vida · Entrega tras verificar el pago</p>
+        <p class="small" style="margin-top:8px;color:var(--gray-300)">8 recursos · Acceso de por vida · Entrega por mail</p>
       </div>
 
       <!-- OFFER IMAGE — full bundle spread -->
@@ -3449,7 +3410,7 @@ document.head.appendChild(s);
           <div class="offer-price-col" style="color:var(--gold-light)">$4.400</div>
         </div>
         <div class="offer-row">
-          <div class="offer-row-left"><span class="offer-check">✓</span> Garantía de 7 días — reembolso por transferencia</div>
+          <div class="offer-row-left"><span class="offer-check">✓</span> Garantía de 7 días — reembolso garantizado</div>
           <div class="offer-price-col" style="color:var(--green)">Sin riesgo</div>
         </div>
       </div>
@@ -3469,14 +3430,15 @@ document.head.appendChild(s);
       <p class="small" style="text-align:center;color:var(--gray-500);margin:0;padding:0 28px 20px">Empezá hoy mismo por menos de lo que cuestan unas pocas comidas rápidas.</p>
 
       <div class="offer-cta">
-        <a href="pago.html"
+        <a href="https://iusn3r-xr.myshopify.com/cart/46727817691215:1"
    class="btn btn-gold btn-full"
    id="main-cta"
    onclick="return handleCtaClick(event, this);">
   Activar mi acceso — $9.500
 </a>
+        <p class="small" style="text-align:center;color:var(--gray-500);margin:10px 0 0;padding:0 28px">📩 Tras la compra revisá también <strong>spam / correo no deseado</strong>: a veces el mail de acceso llega ahí.</p>
         <div class="cta-microcopy">
-          <span>🔒 Pago por transferencia bancaria</span>
+          <span>🔒 Pago seguro con Mercado Pago o tarjeta</span>
           <span>⚡ Acceso inmediato</span>
           <span>↩ Garantía de 7 días</span>
         </div>
@@ -3495,7 +3457,7 @@ document.head.appendChild(s);
       <div class="guarantee-shield">🛡</div>
       <h3 class="guarantee-title">Garantía de 7 días</h3>
       <p class="body-lg" style="max-width:460px;margin:0 auto 10px;color:var(--green);font-weight:500">Podés probar el sistema completo sin ningún riesgo.</p>
-      <p class="body-lg" style="max-width:460px;margin:0 auto 16px">Si dentro de los primeros 7 días sentís que el Método Neuroproductivo no es para vos, nos escribís por WhatsApp y te devolvemos el 100% de tu dinero por el mismo medio en que hiciste la transferencia.</p>
+      <p class="body-lg" style="max-width:460px;margin:0 auto 16px">Si dentro de los primeros 7 días sentís que el Método Neuroproductivo no es para vos, nos escribís por WhatsApp y gestionamos el reembolso del 100% de tu dinero al mismo medio de pago que usaste.</p>
       <p class="small" style="color:var(--gray-500)">Sin formularios. Sin burocracia. El riesgo es cero — el costo de no intentarlo es mucho mayor.</p>
       <p class="small" style="margin-top:10px;color:var(--gray-300)">Tu única decisión hoy es probarlo. Si en 7 días no le encontrás valor, pedís que te devuelvan los $9.500 — sin preguntas.</p>
     </div>
@@ -3551,14 +3513,15 @@ document.head.appendChild(s);
     </div>
 
     <div class="fade">
-     <a href="pago.html"
+     <a href="https://iusn3r-xr.myshopify.com/cart/46727817691215:1"
    class="btn btn-gold"
    style="max-width:480px;margin:0 auto;padding:20px 32px;font-size:16px"
    onclick="return handleCtaClick(event, this);">
   Quiero empezar hoy — $9.500
 </a>
+      <p class="small" style="text-align:center;color:var(--gray-500);margin:10px 0 0">📩 Tras la compra revisá también <strong>spam / correo no deseado</strong>: a veces el mail de acceso llega ahí.</p>
       <div class="cta-microcopy">
-        <span>🔒 Pago por transferencia bancaria</span>
+        <span>🔒 Pago seguro con Mercado Pago o tarjeta</span>
         <span>⚡ Acceso inmediato</span>
         <span>↩ Garantía de 7 días</span>
       </div>
@@ -3578,20 +3541,18 @@ document.head.appendChild(s);
   </div>
 </section>
 
-</section><!-- /#offer-section -->
-
 <!-- FOOTER -->
 <footer>
   <p>© Método Neuroproductivo &nbsp;·&nbsp; <a href="#">Contacto</a> &nbsp;·&nbsp; <a href="#">Política de privacidad</a> &nbsp;·&nbsp; <a href="#">Términos</a></p>
 </footer>
 
-<!-- STICKY MOBILE CTA — oculto hasta que se desbloquea la oferta con el VSL (ver <script> antes de </body>) -->
+<!-- STICKY MOBILE CTA — aparece al hacer scroll cerca de los recursos (ver <script> antes de </body>) -->
 <div class="sticky" id="stk" style="display:none">
   <div class="sticky-price">
     <div class="from">$46.200</div>
     <div class="now">$9.500</div>
   </div>
- <a href="pago.html"
+ <a href="https://iusn3r-xr.myshopify.com/cart/46727817691215:1"
    class="btn btn-gold"
    onclick="return handleCtaClick(event, this);">
     Activar acceso — $9.500
@@ -3639,72 +3600,11 @@ function toggleFaq(btn) {
 
 // ── COUNTDOWN removed — replaced with static launch pricing message ──
 
-// ══════════════════════════════════════════════════════════
-// TEST DE NUEVA VSL — DESBLOQUEO DE OFERTA
-// ══════════════════════════════════════════════════════════
-// Configurado para revelar la oferta en el minuto 3:25 del VSL.
-const OFFER_REVEAL_TIME = 205; // 3:25
-
-const offerSection = document.getElementById('offer-section');
-const stk = document.getElementById('stk');
-let offerUnlocked = false;
-
-function unlockOffer() {
-  if (offerUnlocked) return;
-  offerUnlocked = true;
-  offerSection.classList.remove('offer-hidden');
-  offerSection.classList.add('offer-visible');
-  // Anima de inmediato los elementos .fade que ya estén en pantalla
-  offerSection.querySelectorAll('.fade').forEach(el => el.classList.add('in'));
-}
-
-// ── Integración con VTurb ──
-// VTurb (Converteai) puede exponer el progreso del video de más de
-// una forma según la versión del script del player. Dejamos 3 vías
-// de conexión; alguna de ellas debería disparar unlockOffer():
-const vturbPlayerId = 'vid-6a90697fc5848b2375869d7a';
-
-// 1) Evento nativo del player, si tu versión de VTurb lo emite.
-document.addEventListener('vturb:timeupdate', (e) => {
-  if (e.detail && typeof e.detail.currentTime === 'number' && e.detail.currentTime >= OFFER_REVEAL_TIME) {
-    unlockOffer();
-  }
-});
-
-// 2) Polling: si el elemento <vturb-smartplayer> expone currentTime
-//    (directamente o vía player.player.currentTime), lo chequeamos
-//    cada segundo.
-const vturbPoll = setInterval(() => {
-  const player = document.getElementById(vturbPlayerId);
-  const currentTime = player && (player.currentTime ?? (player.player && player.player.currentTime));
-  if (typeof currentTime === 'number' && currentTime >= OFFER_REVEAL_TIME) {
-    unlockOffer();
-    clearInterval(vturbPoll);
-  }
-}, 1000);
-
-// 3) Fallback manual: si no se puede leer el tiempo real del player,
-//    contamos desde que el usuario le da play (primer click sobre
-//    el reproductor). Asume reproducción lineal, sin saltos.
-document.querySelectorAll('.vsl-inner').forEach((vslInner) => {
-  vslInner.addEventListener('click', function startManualTimer() {
-    if (offerUnlocked) return;
-    let elapsed = 0;
-    const manualTimer = setInterval(() => {
-      elapsed++;
-      if (elapsed >= OFFER_REVEAL_TIME || offerUnlocked) {
-        unlockOffer();
-        clearInterval(manualTimer);
-      }
-    }, 1000);
-  }, { once: true });
-});
-
 // ── STICKY CTA ──
-// Permanece oculto hasta que se desbloquea la oferta con el VSL.
-// Una vez desbloqueada, se muestra al hacer scroll cerca de los recursos.
+// Se muestra al hacer scroll cerca de los recursos. La landing está
+// completamente abierta desde el ingreso, sin ningún tipo de bloqueo.
+const stk = document.getElementById('stk');
 window.addEventListener('scroll', () => {
-  if (!offerUnlocked) { stk.style.display = 'none'; return; }
   const trigger = document.querySelector('.teaser-grid');
   if (!trigger) { stk.style.display = 'flex'; return; }
   const rect = trigger.getBoundingClientRect();
