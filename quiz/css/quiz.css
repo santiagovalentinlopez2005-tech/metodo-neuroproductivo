@@ -1,0 +1,684 @@
+/* Estilos del quiz. Mobile-first: una columna, objetivos táctiles >= 48 px.
+   En escritorio es la misma columna centrada. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-b);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* Resplandor dorado suave arriba, igual que el hero de la landing. */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 700px;
+  height: 420px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201, 151, 58, 0.08) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 3px;
+}
+
+.mnq-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── Estructura ─────────────────────────────────────────────────────────────── */
+
+.mnq-app {
+  position: relative;
+  z-index: 1;
+  max-width: var(--wrap);
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top) var(--gutter) 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mnq-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  height: 56px;
+  margin: 0 calc(var(--gutter) * -1);
+  padding: 0 var(--gutter);
+  background: linear-gradient(var(--black) 72%, rgba(8, 8, 8, 0));
+}
+
+.mnq-back {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-left: -10px;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  color: var(--gray-100);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mnq-brand,
+.mnq-counter {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: center;
+}
+
+.mnq-brand {
+  font: 800 12px/1 var(--font-h);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.mnq-brand span {
+  color: var(--gold-light);
+}
+
+.mnq-counter {
+  font: 500 13px/1 var(--font-b);
+  color: var(--gray-300);
+}
+
+/* Con contador activado, en las preguntas el centro del encabezado muestra el contador.
+   En el hook la marca ya figura en la etiqueta del título, así que no se repite. */
+.mnq-app[data-counter='on'][data-screen='question'] .mnq-brand,
+.mnq-app[data-screen='hook'] .mnq-brand {
+  display: none;
+}
+
+.mnq-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.mnq-main.is-busy {
+  pointer-events: none;
+}
+
+.mnq-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0 28px;
+}
+
+/* ── Tipografía ─────────────────────────────────────────────────────────────── */
+
+.mnq-kicker {
+  margin-bottom: 14px;
+  font: 500 12px/1.3 var(--font-b);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.mnq-eyebrow {
+  margin-bottom: 12px;
+  font: 500 14px/1.3 var(--font-b);
+  color: var(--gold-light);
+}
+
+.mnq-title {
+  font: 800 clamp(28px, 8.4vw, 38px) / 1.12 var(--font-h);
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+
+.mnq-title--question {
+  font-size: clamp(24px, 6.6vw, 30px);
+  line-height: 1.18;
+}
+
+.mnq-statement {
+  font: 800 clamp(22px, 6.2vw, 28px) / 1.24 var(--font-h);
+  letter-spacing: -0.01em;
+  color: var(--white);
+}
+
+.mnq-lead {
+  margin-top: 16px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--gray-300);
+}
+
+.mnq-subtitle {
+  margin-top: 10px;
+  font-size: 15px;
+  color: var(--gray-300);
+}
+
+[data-focus]:focus {
+  outline: none;
+}
+
+/* ── Botones ────────────────────────────────────────────────────────────────── */
+
+.mnq-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 56px;
+  padding: 16px 24px;
+  border: 0;
+  border-radius: var(--r-btn);
+  font: 800 16px/1.2 var(--font-h);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.mnq-btn--primary {
+  background: linear-gradient(135deg, #c9973a 0%, #e0b86a 50%, #c9973a 100%);
+  color: var(--black);
+  box-shadow: 0 8px 32px rgba(201, 151, 58, 0.25);
+}
+
+.mnq-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--gold-border);
+  color: var(--gold-light);
+}
+
+.mnq-restart {
+  margin-top: 32px;
+}
+
+.mnq-btn:active {
+  transform: scale(0.985);
+}
+
+.mnq-actions {
+  margin-top: auto;
+  padding-top: 32px;
+}
+
+.mnq-fineprint {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--gray-300);
+}
+
+/* ── Hook ───────────────────────────────────────────────────────────────────── */
+
+.mnq-hook {
+  padding-top: 28px;
+}
+
+.mnq-marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+  list-style: none;
+}
+
+.mnq-marks li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid var(--gold-border);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--gray-100);
+}
+
+.mnq-marks li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* ── Opciones ───────────────────────────────────────────────────────────────── */
+
+.mnq-options {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.mnq-question .mnq-options--scale {
+  margin-top: auto;
+  padding-top: 28px;
+}
+
+.mnq-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 16px 18px;
+  background: var(--black-3);
+  border: 1px solid var(--border-md);
+  border-radius: var(--r-card);
+  font: 500 16px/1.35 var(--font-b);
+  color: var(--white);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.15s var(--ease), background-color 0.15s var(--ease), transform 0.12s var(--ease);
+}
+
+.mnq-option:active {
+  transform: scale(0.985);
+}
+
+@media (hover: hover) {
+  .mnq-option:hover {
+    border-color: var(--gold-border);
+  }
+}
+
+.mnq-option.is-selected {
+  border-color: var(--gold);
+  background: var(--gold-glow);
+}
+
+.mnq-option__mark {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--gray-500);
+  border-radius: 50%;
+}
+
+.mnq-option.is-selected .mnq-option__mark {
+  border-color: var(--gold);
+  background: var(--gold);
+  box-shadow: inset 0 0 0 4px var(--black-3);
+}
+
+/* ── Pausa y diagrama del ciclo ─────────────────────────────────────────────── */
+
+.mnq-card {
+  margin-top: 28px;
+  padding: 22px 12px 14px;
+  background: var(--black-3);
+  border: 1px solid var(--border-md);
+  border-radius: var(--r-card);
+}
+
+.mnq-cycle {
+  margin: 0;
+}
+
+.mnq-cycle__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.mnq-cycle__link,
+.mnq-cycle__arrow {
+  fill: none;
+  stroke: var(--gray-500);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mnq-cycle__circle {
+  fill: var(--black-4);
+  stroke: var(--gray-500);
+  stroke-width: 2;
+}
+
+.mnq-cycle__number {
+  fill: var(--gray-300);
+  font: 800 15px var(--font-h);
+}
+
+.mnq-cycle__label {
+  fill: var(--gray-300);
+  font: 500 14px var(--font-b);
+}
+
+.mnq-cycle__node--primary .mnq-cycle__circle {
+  fill: var(--gold);
+  stroke: var(--gold-light);
+  filter: drop-shadow(0 0 10px rgba(201, 151, 58, 0.55));
+}
+
+.mnq-cycle__node--primary .mnq-cycle__number {
+  fill: var(--black);
+}
+
+.mnq-cycle__node--primary .mnq-cycle__label {
+  fill: var(--white);
+}
+
+.mnq-cycle__node--secondary .mnq-cycle__circle {
+  fill: var(--gold-glow);
+  stroke: var(--gold-border);
+}
+
+.mnq-cycle__node--secondary .mnq-cycle__number {
+  fill: var(--gold-light);
+}
+
+.mnq-cycle__node--secondary .mnq-cycle__label {
+  fill: var(--gold-pale);
+}
+
+/* ── Entrada al resultado ───────────────────────────────────────────────────── */
+
+.mnq-reveal {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.mnq-reveal__text {
+  font: 800 24px/1.25 var(--font-h);
+  color: var(--gold-light);
+}
+
+/* ── Resultado ──────────────────────────────────────────────────────────────── */
+
+.mnq-result {
+  padding-bottom: 190px; /* deja lugar a la barra fija del CTA */
+}
+
+.mnq-note {
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--gold-border);
+  border-radius: 12px;
+  background: var(--gold-glow);
+  font-size: 14.5px;
+  color: var(--gold-pale);
+}
+
+.mnq-result__name {
+  font: 800 clamp(32px, 9.5vw, 42px) / 1.08 var(--font-h);
+  letter-spacing: -0.02em;
+  color: var(--gold-light);
+}
+
+.mnq-result__descriptor {
+  margin-top: 10px;
+  font: 500 18px/1.4 var(--font-b);
+  color: var(--white);
+}
+
+.mnq-result__art {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 22px;
+  border-radius: var(--r-card);
+}
+
+.mnq-meter {
+  margin-top: 22px;
+}
+
+.mnq-meter__caption {
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--gray-300);
+}
+
+.mnq-meter__bar,
+.mnq-meter__labels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.mnq-meter__seg {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--gray-700);
+}
+
+.mnq-meter__seg.is-on {
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+}
+
+.mnq-meter__labels {
+  margin-top: 8px;
+  list-style: none;
+  font-size: 12px;
+  color: var(--gray-300);
+}
+
+.mnq-meter__labels li.is-active {
+  color: var(--gold-light);
+  font-weight: 500;
+}
+
+.mnq-cycle-card {
+  text-align: center;
+}
+
+.mnq-cycle-card__caption {
+  margin-top: 6px;
+  font: 500 14px/1.3 var(--font-b);
+  color: var(--gold-light);
+}
+
+.mnq-secondary {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px dashed var(--gold-border);
+  border-radius: var(--r-card);
+  font-size: 14.5px;
+  color: var(--gold-pale);
+}
+
+.mnq-block {
+  margin-top: 30px;
+}
+
+.mnq-block__title {
+  margin-bottom: 10px;
+  font: 800 13px/1.3 var(--font-b);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.mnq-block p {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--gray-100);
+}
+
+.mnq-block p + p {
+  margin-top: 12px;
+}
+
+.mnq-block strong {
+  font-weight: 500;
+  color: var(--white);
+}
+
+.mnq-block .mnq-lead-strong {
+  font-weight: 500;
+  color: var(--white);
+}
+
+.mnq-list {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+}
+
+.mnq-list li {
+  position: relative;
+  padding-left: 22px;
+  line-height: 1.55;
+  color: var(--gray-100);
+}
+
+.mnq-list li::before {
+  content: '';
+  position: absolute;
+  top: 0.62em;
+  left: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.mnq-block .mnq-echo {
+  margin-top: 14px;
+  font-size: 14.5px;
+  color: var(--gold-pale);
+}
+
+.mnq-block .mnq-goal {
+  margin-top: 14px;
+}
+
+.mnq-result__foot {
+  margin-top: 36px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.mnq-disclaimer {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--gray-300);
+}
+
+.mnq-privacy {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--gray-300);
+}
+
+/* Barra fija inferior con el CTA del resultado. */
+.mnq-cta-host {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.mnq-cta-bar {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 22px var(--gutter) calc(14px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--black) 70%, rgba(8, 8, 8, 0));
+  pointer-events: auto;
+}
+
+.mnq-microcopy {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--gray-300);
+}
+
+/* ── Movimiento ─────────────────────────────────────────────────────────────── */
+
+@keyframes mnq-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes mnq-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.mnq-in {
+  animation: mnq-in 0.24s var(--ease) both;
+}
+
+.mnq-out {
+  animation: mnq-out 0.15s ease-in both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (min-width: 600px) {
+  .mnq-app {
+    padding-top: 16px;
+  }
+}
+
+.mnq-noscript {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--gray-300);
+}

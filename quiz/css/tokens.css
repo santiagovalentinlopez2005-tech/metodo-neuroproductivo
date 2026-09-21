@@ -1,0 +1,30 @@
+/* Tokens de diseño del quiz. Los valores de color son los de la landing publicada
+   (negro + dorado, Manrope + Inter) para que el quiz se sienta parte de la misma marca. */
+:root {
+  --black: #080808;
+  --black-2: #0f0f0f;
+  --black-3: #141414;
+  --black-4: #1a1a1a;
+  --black-5: #222222;
+  --white: #ffffff;
+  --gray-100: #e8e8e8;
+  --gray-300: #a0a0a0;
+  --gray-500: #606060;
+  --gray-700: #303030;
+  --gold: #c9973a;
+  --gold-light: #e0b86a;
+  --gold-pale: #f5e6cc;
+  --gold-glow: rgba(201, 151, 58, 0.18);
+  --gold-border: rgba(201, 151, 58, 0.3);
+  --border: rgba(255, 255, 255, 0.06);
+  --border-md: rgba(255, 255, 255, 0.1);
+
+  --font-h: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-b: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --r-card: 16px;
+  --r-btn: 14px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --wrap: 480px;
+  --gutter: 20px;
+}

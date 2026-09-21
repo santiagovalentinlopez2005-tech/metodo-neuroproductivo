@@ -1,0 +1,54 @@
+/* Bloque de continuidad de la landing para tráfico del quiz. Usa las variables de la propia
+   landing (con valores de respaldo) para verse como parte de la página. */
+.mnq-bridge {
+  max-width: 540px;
+  margin: 26px auto 0;
+  padding: 16px 18px;
+  text-align: left;
+  background: var(--black-3, #141414);
+  border: 1px solid var(--gold-border, rgba(201, 151, 58, 0.3));
+  border-radius: 14px;
+  animation: mnq-bridge-in 0.4s ease-out both;
+}
+
+.mnq-bridge__chip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin: 0 0 10px;
+}
+
+.mnq-bridge__label {
+  font: 500 11px/1 var(--font-b, 'Inter', sans-serif);
+  letter-spacing: 0.14em;
+  color: var(--gold-light, #e0b86a);
+}
+
+.mnq-bridge__name {
+  font: 800 15px/1.2 var(--font-h, 'Manrope', sans-serif);
+  color: var(--white, #fff);
+}
+
+.mnq-bridge__text {
+  margin: 0;
+  font: 400 15px/1.55 var(--font-b, 'Inter', sans-serif);
+  color: var(--gray-100, #e8e8e8);
+}
+
+@keyframes mnq-bridge-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mnq-bridge {
+    animation: none;
+  }
+}
