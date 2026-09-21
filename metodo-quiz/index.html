@@ -3583,7 +3583,10 @@ document.head.appendChild(s);
 // para la persona, pero le da tiempo a la petición a Meta de salir.
 function handleCtaClick(event, link) {
   event.preventDefault();
-  if (typeof fbq === 'function') { fbq('track', 'InitiateCheckout'); }
+  // COPIA PARA TRÁFICO DEL QUIZ: no se dispara InitiateCheckout acá. El Pixel de Shopify (el mismo ID
+  // 1586292786039230) ya lo dispara al abrir el checkout (checkout_started) y contarlo también en el
+  // clic lo duplicaría. El clic queda registrado como evento personalizado LandingCtaClick (con el
+  // patrón) desde /quiz/js/bridge.js. La demora de 200 ms se mantiene para que ese evento alcance a salir.
   setTimeout(() => { window.location.href = link.href; }, 200);
   return false;
 }
