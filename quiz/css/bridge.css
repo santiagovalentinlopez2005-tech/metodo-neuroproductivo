@@ -1,8 +1,9 @@
 /* Bloque de continuidad de la landing para tráfico del quiz. Usa las variables de la propia
    landing (con valores de respaldo) para verse como parte de la página. */
-.mnq-bridge {
+.mnq-bridge,
+.mnq-bridge-detail {
   max-width: 540px;
-  margin: 26px auto 0;
+  margin: 18px auto 0;
   padding: 16px 18px;
   text-align: left;
   background: var(--black-3, #141414);
@@ -11,12 +12,17 @@
   animation: mnq-bridge-in 0.4s ease-out both;
 }
 
+/* Encima del video va solo el resultado, compacto, para que el video quede a la vista. */
+.mnq-bridge {
+  padding: 11px 16px;
+}
+
 .mnq-bridge__chip {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 12px;
-  margin: 0 0 10px;
+  margin: 0;
 }
 
 .mnq-bridge__label {
@@ -36,6 +42,14 @@
   color: var(--gray-100, #e8e8e8);
 }
 
+.mnq-bridge__goal {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--gold-border, rgba(201, 151, 58, 0.3));
+  font: 500 14px/1.5 var(--font-b, 'Inter', sans-serif);
+  color: var(--gold-pale, #f0d9a8);
+}
+
 @keyframes mnq-bridge-in {
   from {
     opacity: 0;
@@ -48,7 +62,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mnq-bridge {
+  .mnq-bridge,
+  .mnq-bridge-detail {
     animation: none;
   }
 }

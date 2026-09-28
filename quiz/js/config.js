@@ -11,12 +11,13 @@ export const CONFIG = {
   privacyUrl: null,
 
   showCounter: true, // "Pregunta X de 10" (apagable para probar con y sin)
+  showProgress: true, // barra dorada de avance debajo del encabezado (preguntas y pausa)
   totalQuestions: 10,
 
   timing: {
     selectFeedbackMs: 160, // feedback visual al tocar una opción, antes de avanzar
     transitionMs: 240, // transición entre pantallas
-    revealMs: 1000, // "Listo. Este es tu patrón principal." antes del resultado
+    revealMs: 1800, // "Listo. Este es tu patrón principal." antes del resultado
     navigateDelayMs: 200, // margen para que el evento del CTA salga antes de navegar
   },
 
@@ -31,16 +32,39 @@ export const CONFIG = {
     pixelId: '1586292786039230', // el mismo Meta Pixel de la landing publicada
     // Solo en estos hosts se envían eventos reales a Meta. En cualquier otro host
     // (localhost, previews de Vercel) los eventos se registran en consola.
-    productionHosts: ['metodo-neuroproductivoarg-sand.vercel.app'],
+    productionHosts: ['metodo-neuroproductivoarg-sand.vercel.app', 'metodo-neuroproductivoar.vercel.app'],
   },
 
   // Rutas de imágenes opcionales. null = no se muestra imagen (por defecto).
   // Se completan cuando existan las ilustraciones generadas (ver prompts de la Fase 1).
   images: {
-    hook: null,
-    atajo: null,
-    arranque: null,
-    racha: null,
+    hook: '/quiz/img/hook.webp',
+    atajo: '/quiz/img/result-atajo.webp',
+    arranque: '/quiz/img/result-arranque.webp',
+    racha: '/quiz/img/result-racha.webp',
+  },
+
+  // Pantalla de resultado: bloques opcionales. Apagados para que el resultado sea corto y lo más
+  // convincente («Cómo se suele ver») quede arriba; se pueden volver a prender para probar.
+  result: {
+    showEcho: false, // «Según tus respuestas, te pasa seguido que…» (repetía las viñetas de arriba)
+    showCycle: false, // diagrama Distraerte · Arrancar · Sostener (ya se ve en la pausa)
+  },
+
+  // Tamaño real de cada imagen (ancho, alto): reserva el espacio y evita saltos de diseño al cargar.
+  imageSizes: {
+    hook: [900, 675],
+    atajo: [800, 600],
+    arranque: [800, 600],
+    racha: [800, 280],
+  },
+
+  // Ícono chico por dimensión, arriba de cada afirmación de escala (preguntas 2 a 7).
+  // { src, w, h }: el tamaño evita saltos de diseño al cargar.
+  icons: {
+    atajo: { src: '/quiz/img/icon-atajo.webp', w: 256, h: 256 },
+    arranque: { src: '/quiz/img/icon-arranque.webp', w: 256, h: 255 },
+    racha: { src: '/quiz/img/icon-racha.webp', w: 480, h: 192 },
   },
 };
 

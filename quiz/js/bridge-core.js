@@ -34,15 +34,22 @@ export function parseBridgeParams(search) {
 
 // Agrega al enlace de compra (Shopify) el patrón y la sesión del quiz, y propaga los utm_*
 // y el fbclid con los que llegó la persona. No pisa parámetros que el enlace ya tenga.
+//
+// `pattern`, `qsid` y `src` viajan como `attributes[...]` (sintaxis de permalink de carrito de
+// Shopify): verificado contra la tienda real que así SÍ quedan guardados en `/cart.js` y como
+// nota del pedido (`NoteAttribute`) — a diferencia de mandarlos como parámetro suelto, que
+// llega hasta la URL del checkout pero no se guarda en ningún lado persistente de Shopify.
+// utm_*/fbclid se dejan como parámetros sueltos, sin tocar: son atribución del anuncio, no del
+// quiz, y así es como Shopify y el Pixel ya los leen desde la URL de la página.
 export function decorateShopifyUrl(href, { bridge, attribution = {} }) {
   try {
     const url = new URL(href, 'https://placeholder.invalid');
     const set = (key, value) => {
       if (value && !url.searchParams.has(key)) url.searchParams.set(key, value);
     };
-    set('pattern', bridge.pattern);
-    set('qsid', bridge.qsid);
-    set('src', 'quiz');
+    set('attributes[pattern]', bridge.pattern);
+    set('attributes[qsid]', bridge.qsid);
+    set('attributes[src]', 'quiz');
     for (const [key, value] of Object.entries(extractAttribution(new URLSearchParams(attribution).toString()))) {
       set(key, value);
     }

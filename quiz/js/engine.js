@@ -47,6 +47,12 @@ export function createEngine({
   const questionIds = flow.filter((id) => byId.has(id));
   const listeners = new Set();
 
+  // `utm_content` identifica el anuncio/creativo (distinto de `pattern`, que es el resultado
+  // conductual, y de `qsid`, que identifica la sesión). Se agrega solo a los eventos de etapa
+  // del funnel (arranque, finalización, resultado, clic al CTA), no a cada respuesta individual:
+  // esas ya llevan `qsid`, y por sesión se puede unir con el `utm_content` de `quiz_start`.
+  const utmContent = () => handoff.getAttribution().utm_content || 'none';
+
   function newState() {
     return {
       index: 0,
@@ -197,6 +203,7 @@ export function createEngine({
         tracking.track('quiz_completion', {
           qsid: state.qsid,
           total_ms: state.startedAt ? now() - state.startedAt : null,
+          utm_content: utmContent(),
         });
       }
     } else {
@@ -222,7 +229,7 @@ export function createEngine({
       if (flow[state.index] !== 'hook') return;
       state.started = true;
       state.startedAt = now();
-      tracking.track('quiz_start', { qsid: state.qsid });
+      tracking.track('quiz_start', { qsid: state.qsid, utm_content: utmContent() });
       goTo(1, 'forward');
     },
 
@@ -269,6 +276,7 @@ export function createEngine({
           low_signal: lowSignal,
           goal: goal || 'none',
           ctx: ctx || 'none',
+          utm_content: utmContent(),
         });
         tracking.track(`result_profile_${pattern}`, { qsid: state.qsid, intensity });
       }
@@ -282,6 +290,7 @@ export function createEngine({
         qsid: state.qsid,
         pattern: state.result.pattern,
         intensity: state.result.intensity,
+        utm_content: utmContent(),
       });
       return handoff.buildLandingUrl({
         result: state.result,

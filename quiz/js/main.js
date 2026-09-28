@@ -15,6 +15,17 @@ function qaSeed() {
   return raw !== null && /^\d{1,10}$/.test(raw) ? Number(raw) : null;
 }
 
+// Precarga las imágenes para que aparezcan sin demora: los íconos ya (son livianos) y las
+// ilustraciones del resultado cuando el navegador está libre.
+function preloadImages() {
+  const load = (src) => { const img = new Image(); img.decoding = 'async'; img.src = src; };
+  Object.values(CONFIG.icons || {}).forEach((icon) => load(icon.src));
+  const results = ['atajo', 'arranque', 'racha'].map((k) => CONFIG.images[k]).filter(Boolean);
+  const later = () => results.forEach(load);
+  if ('requestIdleCallback' in window) window.requestIdleCallback(later, { timeout: 3000 });
+  else window.setTimeout(later, 1500);
+}
+
 function start() {
   initTracking();
   captureAttribution();
@@ -31,6 +42,7 @@ function start() {
   });
 
   engine.restore();
+  preloadImages();
   mountUI({ root: document.getElementById('app'), engine, config: CONFIG });
 
   // Mejor esfuerzo: la persona cierra la página a mitad del quiz. La medición fiable del

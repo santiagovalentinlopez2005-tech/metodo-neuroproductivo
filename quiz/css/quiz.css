@@ -124,6 +124,31 @@ button {
   color: var(--gray-300);
 }
 
+/* Barra de avance (preguntas y pausa), pegada al borde de abajo del encabezado fijo. */
+.mnq-progress {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 2px;
+  left: var(--gutter);
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--border-md);
+}
+
+.mnq-progress[hidden] {
+  display: none;
+}
+
+.mnq-progress__fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  transition: width 0.35s var(--ease);
+}
+
 /* Con contador activado, en las preguntas el centro del encabezado muestra el contador.
    En el hook la marca ya figura en la etiqueta del título, así que no se repite. */
 .mnq-app[data-counter='on'][data-screen='question'] .mnq-brand,
@@ -461,6 +486,9 @@ button {
   display: block;
   width: 100%;
   height: auto;
+  /* Más baja para que «Cómo se suele ver» (lo que más convence) quede arriba. Se ve entera, centrada. */
+  max-height: min(190px, 24vh);
+  object-fit: contain;
   margin-top: 22px;
   border-radius: var(--r-card);
 }
@@ -589,6 +617,98 @@ button {
   margin-top: 14px;
 }
 
+/* Lo que eligió cambiar primero, suelto (el bloque del método quedó plegado). */
+.mnq-goal-block {
+  padding-left: 14px;
+  border-left: 2px solid var(--gold-border);
+}
+
+.mnq-block.mnq-goal-block .mnq-goal {
+  margin-top: 0;
+}
+
+/* La imagen ocupa solo el espacio libre entre las etiquetas y el botón: el botón
+   principal nunca queda fuera de la pantalla. En pantallas muy bajas se oculta. */
+.mnq-hook__art {
+  display: block;
+  flex: 1 1 0;
+  min-height: 0;
+  max-height: 300px;
+  width: 100%;
+  margin: 22px 0 0;
+  object-fit: cover;
+  border-radius: var(--r-card);
+}
+
+@media (max-height: 750px) {
+  .mnq-hook__art {
+    display: none;
+  }
+}
+
+.mnq-dim-icon {
+  display: block;
+  align-self: flex-start;
+  width: auto;
+  height: 52px;
+  margin: 0 0 12px;
+}
+
+/* En celulares de poca altura el ícono se achica o se oculta: las 4 opciones tienen que
+   verse completas sin hacer scroll. */
+@media (max-height: 700px) {
+  .mnq-dim-icon {
+    height: 36px;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-height: 600px) {
+  .mnq-dim-icon {
+    display: none;
+  }
+}
+
+@media (max-width: 340px) {
+  .mnq-brand {
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+  }
+}
+
+.mnq-scene {
+  margin-top: 14px;
+  font-size: 17px;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--gold-pale);
+}
+
+.mnq-result__intro {
+  margin-top: 22px;
+  font-size: 17px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.mnq-why {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+.mnq-why__summary {
+  cursor: pointer;
+  font: 800 13px/1.3 var(--font-b);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.mnq-why[open] .mnq-why__summary {
+  margin-bottom: 12px;
+}
+
 .mnq-result__foot {
   margin-top: 36px;
   padding-top: 18px;
@@ -663,6 +783,10 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .mnq-progress__fill {
+    transition: none;
+  }
+
   *,
   *::before,
   *::after {

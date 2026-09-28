@@ -1,7 +1,7 @@
 // Interfaz: dibuja la vista que emite el motor (hook, preguntas, pausa, entrada y resultado)
 // y traduce toques en llamadas al motor. Todo el texto entra como texto, nunca como HTML.
 
-import { LIKERT_PROMPT, UI } from './content.js';
+import { FLOW, LIKERT_PROMPT, UI } from './content.js';
 import { buildCycleDiagram } from './diagram.js';
 import { el, prefersReducedMotion } from './dom.js';
 import { buildResult } from './result.js';
@@ -16,12 +16,17 @@ export function mountUI({ root, engine, config }) {
   const backButton = el('button', { class: 'mnq-back', type: 'button', 'aria-label': UI.back, onclick: () => engine.back() });
   backButton.insertAdjacentHTML('afterbegin', ARROW_BACK); // SVG estático propio, sin datos externos
   const counter = el('span', { class: 'mnq-counter' });
+  // Barra de avance: decorativa (el avance ya lo dice «Pregunta X de 10», que se anuncia al lector de pantalla).
+  const progressFill = el('span', { class: 'mnq-progress__fill' });
+  const progress = el('div', { class: 'mnq-progress', 'aria-hidden': 'true' }, progressFill);
+  progress.hidden = true;
   const header = el(
     'header',
     { class: 'mnq-header' },
     backButton,
     el('p', { class: 'mnq-brand' }, `${UI.brand.first} `, el('span', { text: UI.brand.second })),
     counter,
+    progress,
   );
   const main = el('main', { class: 'mnq-main', id: 'mnq-main' });
   const ctaHost = el('div', { class: 'mnq-cta-host' });
@@ -36,8 +41,12 @@ export function mountUI({ root, engine, config }) {
       { class: 'mnq-screen mnq-hook' },
       el('p', { class: 'mnq-kicker', text: UI.hook.kicker }),
       el('h1', { class: 'mnq-title', tabindex: '-1', 'data-focus': '', text: UI.hook.title }),
+      el('p', { class: 'mnq-scene', text: UI.hook.scene }),
       el('p', { class: 'mnq-lead', text: UI.hook.lead }),
       el('ul', { class: 'mnq-marks' }, UI.hook.marks.map((mark) => el('li', { text: mark }))),
+      config.images.hook
+        ? el('img', { class: 'mnq-hook__art', src: config.images.hook, alt: '', width: String(config.imageSizes.hook[0]), height: String(config.imageSizes.hook[1]), decoding: 'async' })
+        : null,
       el(
         'div',
         { class: 'mnq-actions' },
@@ -99,8 +108,10 @@ export function mountUI({ root, engine, config }) {
     });
     group.append(...buttons);
 
+    const icon = isLikert ? config.icons?.[question.dim] : null;
     const heading = isLikert
       ? [
+          icon ? el('img', { class: 'mnq-dim-icon', src: icon.src, alt: '', width: String(icon.w), height: String(icon.h), decoding: 'async' }) : null,
           el('p', { class: 'mnq-eyebrow', text: LIKERT_PROMPT }),
           el('h2', { id: labelId, class: 'mnq-statement', tabindex: '-1', 'data-focus': '', text: question.statement }),
         ]
@@ -112,8 +123,9 @@ export function mountUI({ root, engine, config }) {
     return el('section', { class: 'mnq-screen mnq-question', dataset: { question: question.id } }, heading, group);
   }
 
-  function revealScreen() {
-    return el('section', { class: 'mnq-screen mnq-reveal' }, el('p', { class: 'mnq-reveal__text', 'data-focus': '', tabindex: '-1', text: UI.reveal }));
+  function revealScreen(view) {
+    const text = view.result && view.result.lowSignal ? UI.revealLow : UI.reveal;
+    return el('section', { class: 'mnq-screen mnq-reveal' }, el('p', { class: 'mnq-reveal__text', 'data-focus': '', tabindex: '-1', text }));
   }
 
   // ── Render con transición ───────────────────────────────────────────────────
@@ -154,9 +166,24 @@ export function mountUI({ root, engine, config }) {
     backButton.style.visibility = view.canBack ? 'visible' : 'hidden';
     backButton.disabled = !view.canBack;
     counter.textContent = config.showCounter && view.counter ? UI.counter(view.counter.n, view.counter.total) : '';
+    setProgress(view);
+  }
+
+  // Marca lo ya respondido: en la pregunta 1 un mínimo visible, en la 10 el 90%, y se llena recién en la
+  // entrada al resultado («Listo…»). Pausa: las respondidas hasta ahí. Hook y resultado: oculta.
+  const QUESTIONS_BEFORE_PAUSE = FLOW.slice(0, FLOW.indexOf('pause')).filter((id) => /^q\d+$/.test(id)).length;
+  function setProgress(view) {
+    const total = config.totalQuestions;
+    let pct = null;
+    if (view.kind === 'question') pct = Math.max(6, ((view.counter.n - 1) / total) * 100);
+    else if (view.kind === 'pause') pct = (QUESTIONS_BEFORE_PAUSE / total) * 100;
+    else if (view.kind === 'result' && view.fresh) pct = 100;
+    progress.hidden = !config.showProgress || pct === null;
+    if (pct !== null) progressFill.style.width = `${Math.round(pct)}%`;
   }
 
   function showResult(view, { animate }) {
+    progress.hidden = true;
     const landingUrl = engine.getLandingUrl();
     const { node, cta } = buildResult(view, {
       landingUrl,
@@ -185,7 +212,7 @@ export function mountUI({ root, engine, config }) {
 
     // Resultado: si es recién calculado, primero la entrada breve.
     if (view.fresh) {
-      swap(revealScreen(), view, { animate });
+      swap(revealScreen(view), view, { animate });
       backButton.style.visibility = 'hidden';
       window.setTimeout(() => {
         // Si la persona volvió atrás o salió mientras tanto, este render ya no corresponde.

@@ -50,8 +50,15 @@ export function buildResult(view, { landingUrl, onCtaClick, onRestart }) {
   const example = CONTEXT_EXAMPLE[ctx] || CONTEXT_EXAMPLE.otro;
   const firstStep = content.firstStep.replace('{ejemplo}', example);
 
+  const [artW, artH] = CONFIG.imageSizes?.[result.pattern] || [];
   const art = CONFIG.images[result.pattern]
-    ? el('img', { class: 'mnq-result__art', src: CONFIG.images[result.pattern], alt: '', loading: 'lazy' })
+    ? el('img', {
+        class: 'mnq-result__art',
+        src: CONFIG.images[result.pattern],
+        alt: '',
+        decoding: 'async',
+        ...(artW && artH ? { width: String(artW), height: String(artH) } : {}),
+      })
     : null;
 
   const secondaryCard = result.secondary
@@ -60,8 +67,23 @@ export function buildResult(view, { landingUrl, onCtaClick, onRestart }) {
 
   const goalLine =
     result.goal && GOAL_TEXT[result.goal]
-      ? el('p', { class: 'mnq-goal', text: RESULT_UI.goalLine(GOAL_TEXT[result.goal].label, GOAL_TEXT[result.goal].tool) })
+      ? el('p', { class: 'mnq-goal', text: RESULT_UI.goalLine(GOAL_TEXT[result.goal].label, GOAL_TEXT[result.goal].tool, GOAL_TEXT[result.goal].plural) })
       : null;
+
+  // Bloques opcionales (CONFIG.result): por defecto apagados para que el resultado sea corto.
+  const show = CONFIG.result || {};
+  const cycleCard = show.showCycle
+    ? el(
+        'section',
+        { class: 'mnq-card mnq-cycle-card' },
+        buildCycleDiagram({ primary: result.pattern, secondary: result.secondary }),
+        el('p', { class: 'mnq-cycle-card__caption', text: RESULT_UI.cycleCaption(content.node) }),
+      )
+    : null;
+
+  // Plegable: título visible, contenido al tocarlo.
+  const fold = (title, ...content) =>
+    el('details', { class: 'mnq-block mnq-why' }, el('summary', { class: 'mnq-why__summary', text: title }), ...content);
 
   const privacy = CONFIG.privacyUrl
     ? el('a', { class: 'mnq-privacy', href: CONFIG.privacyUrl, text: RESULT_UI.privacyLabel })
@@ -74,32 +96,25 @@ export function buildResult(view, { landingUrl, onCtaClick, onRestart }) {
     el(
       'header',
       { class: 'mnq-result__head' },
-      el('p', { class: 'mnq-kicker', text: RESULT_UI.kicker }),
+      el('p', { class: 'mnq-kicker', text: result.lowSignal ? RESULT_UI.kickerLow : RESULT_UI.kicker }),
       el('h1', { class: 'mnq-result__name', tabindex: '-1', 'data-focus': '', text: content.name }),
       el('p', { class: 'mnq-result__descriptor', text: content.descriptor }),
       buildMeter(result.intensity),
     ),
     art,
-    el(
-      'section',
-      { class: 'mnq-card mnq-cycle-card' },
-      buildCycleDiagram({ primary: result.pattern, secondary: result.secondary }),
-      el('p', { class: 'mnq-cycle-card__caption', text: RESULT_UI.cycleCaption(content.node) }),
-    ),
-    secondaryCard,
-    section(
-      RESULT_UI.sections.happening,
-      el('p', { class: 'mnq-lead-strong', text: content.intro[result.intensity] }),
-      el('p', { text: content.happening }),
-    ),
+    el('p', { class: 'mnq-result__intro', text: content.intro[result.intensity] }),
     section(
       RESULT_UI.sections.seen,
       el('ul', { class: 'mnq-list' }, content.seen.map((line) => el('li', { text: line }))),
-      echoLine(result.echoItems),
+      show.showEcho ? echoLine(result.echoItems) : null,
     ),
-    section(RESULT_UI.sections.loop, el('p', { text: content.loop })),
+    cycleCard,
+    secondaryCard,
     section(RESULT_UI.sections.firstStep, el('p', { text: firstStep })),
-    section(RESULT_UI.sections.method, el('p', {}, rich(content.method)), goalLine),
+    goalLine ? el('section', { class: 'mnq-block mnq-goal-block' }, goalLine) : null,
+    // Lo que vende el método ya lo cuenta la landing: acá queda plegado, para quien quiera leerlo.
+    fold(RESULT_UI.sections.method, el('p', {}, rich(content.method))),
+    fold(RESULT_UI.sections.why, el('p', { text: content.happening }), el('p', { text: content.loop })),
     el(
       'div',
       { class: 'mnq-restart' },
