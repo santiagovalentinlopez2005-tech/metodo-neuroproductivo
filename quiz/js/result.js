@@ -85,6 +85,15 @@ export function buildResult(view, { landingUrl, onCtaClick, onRestart }) {
   const fold = (title, ...content) =>
     el('details', { class: 'mnq-block mnq-why' }, el('summary', { class: 'mnq-why__summary', text: title }), ...content);
 
+  // «En el video vas a ver»: la razón para tocar el botón, destacada y arriba. Cada punto está en el
+  // guion de la VSL (el video es el mismo para los 3 perfiles; cambia qué parte se destaca).
+  const videoCard = el(
+    'section',
+    { class: 'mnq-block mnq-video' },
+    el('h2', { class: 'mnq-block__title mnq-video__title' }, el('span', { class: 'mnq-video__play', 'aria-hidden': 'true' }), RESULT_UI.sections.video),
+    el('ul', { class: 'mnq-list mnq-video__list' }, content.video.map((line) => el('li', { text: line }))),
+  );
+
   const privacy = CONFIG.privacyUrl
     ? el('a', { class: 'mnq-privacy', href: CONFIG.privacyUrl, text: RESULT_UI.privacyLabel })
     : null;
@@ -103,6 +112,7 @@ export function buildResult(view, { landingUrl, onCtaClick, onRestart }) {
     ),
     art,
     el('p', { class: 'mnq-result__intro', text: content.intro[result.intensity] }),
+    videoCard,
     section(
       RESULT_UI.sections.seen,
       el('ul', { class: 'mnq-list' }, content.seen.map((line) => el('li', { text: line }))),
@@ -110,15 +120,16 @@ export function buildResult(view, { landingUrl, onCtaClick, onRestart }) {
     ),
     cycleCard,
     secondaryCard,
-    section(RESULT_UI.sections.firstStep, el('p', { text: firstStep })),
-    goalLine ? el('section', { class: 'mnq-block mnq-goal-block' }, goalLine) : null,
-    // Lo que vende el método ya lo cuenta la landing: acá queda plegado, para quien quiera leerlo.
-    fold(RESULT_UI.sections.method, el('p', {}, rich(content.method))),
-    fold(RESULT_UI.sections.why, el('p', { text: content.happening }), el('p', { text: content.loop })),
+    // Apagados por defecto (CONFIG.result): el objetivo de esta pantalla es que toque el video.
+    // La línea del objetivo se sigue viendo en la landing, debajo del video.
+    show.showFirstStep ? section(RESULT_UI.sections.firstStep, el('p', { text: firstStep })) : null,
+    show.showGoal && goalLine ? el('section', { class: 'mnq-block mnq-goal-block' }, goalLine) : null,
+    show.showDetails ? fold(RESULT_UI.sections.method, el('p', {}, rich(content.method))) : null,
+    show.showDetails ? fold(RESULT_UI.sections.why, el('p', { text: content.happening }), el('p', { text: content.loop })) : null,
     el(
       'div',
       { class: 'mnq-restart' },
-      el('button', { class: 'mnq-btn mnq-btn--ghost', type: 'button', text: RESULT_UI.restart, onclick: onRestart }),
+      el('button', { class: 'mnq-restart__link', type: 'button', text: RESULT_UI.restart, onclick: onRestart }),
     ),
     el('footer', { class: 'mnq-result__foot' }, el('p', { class: 'mnq-disclaimer', text: RESULT_UI.disclaimer }), privacy),
   );
@@ -129,7 +140,7 @@ export function buildResult(view, { landingUrl, onCtaClick, onRestart }) {
     el('a', {
       class: 'mnq-btn mnq-btn--primary',
       href: landingUrl,
-      text: RESULT_UI.cta.button,
+      text: content.cta || RESULT_UI.cta.button, // lo que gana, según el perfil
       onclick: onCtaClick,
     }),
     el('p', { class: 'mnq-microcopy', text: RESULT_UI.cta.microcopy }),

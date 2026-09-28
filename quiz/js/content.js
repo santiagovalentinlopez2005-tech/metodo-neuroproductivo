@@ -95,7 +95,7 @@ export const QUESTIONS = [
     kind: 'single',
     role: 'context',
     title: '¿Qué describe mejor tu día a día ahora?',
-    subtitle: 'Lo usamos para adaptar algunas preguntas y ejemplos.',
+    subtitle: 'Lo usamos para adaptar algunas preguntas.',
     options: CONTEXTS.map((id) => ({ id, label: CONTEXT_LABEL[id] })),
   },
   {
@@ -228,6 +228,7 @@ export const RESULT_UI = {
   kickerLow: 'LO QUE MÁS APARECE', // en señal baja reemplaza a «TU PATRÓN PRINCIPAL»
   cycleCaption: (nodeLabel) => `Dónde se te traba: al ${nodeLabel.toLowerCase()}`, // igual que el hook
   sections: {
+    video: 'En el video vas a ver',
     why: 'Por qué suele pasar',
     happening: 'Lo que probablemente está pasando',
     seen: 'Cómo se suele ver',
@@ -245,8 +246,8 @@ export const RESULT_UI = {
   // Mismas palabras que la pregunta 10 y que la landing (BRIDGE_UI.goalLine): «cambiar primero».
   goalLine: (goalLabel, tool, plural) => `Lo que elegiste cambiar primero: «${goalLabel}». Ahí ${plural ? 'ayudan' : 'ayuda'} ${tool}.`,
   cta: {
-    button: 'Ver el video de 5 minutos',
-    microcopy: 'Explica por qué te pasa. Sin registro.', // «Sin registro.» no se separa
+    button: 'Ver el video de 5 minutos', // solo si un perfil no define su propio `cta`
+    microcopy: 'Video de 5\u00a0minutos · Sin\u00a0registro.', // «5 minutos» y «Sin registro» no se separan
   },
   disclaimer:
     'Este resultado es una guía para conocerte mejor, basada en tus respuestas. No es un diagnóstico ni reemplaza la ayuda de un profesional.',
@@ -258,6 +259,13 @@ export const RESULTS = {
   atajo: {
     name: 'Atajo de Recompensa',
     descriptor: 'Tu atención elige lo rápido antes que lo importante.',
+    // Botón del resultado y «En el video vas a ver» (cada punto está en el guion de la VSL).
+    cta: 'Ver por qué el celular te gana',
+    video: [
+      'Por qué el celular le gana a lo importante, y no es falta de voluntad.',
+      'Qué cambia cuando el primer paso es chico y concreto.',
+      'Cómo funciona el método de 14 días.',
+    ],
     node: 'Distraerte',
     intro: {
       marcado: 'Es un patrón muy presente en tu día a día: el atajo suele ganar antes de que puedas decidir.',
@@ -293,6 +301,13 @@ export const RESULTS = {
   arranque: {
     name: 'Arranque Trabado',
     descriptor: 'Te cuesta pasar de querer hacerlo a hacerlo.',
+    // Botón del resultado y «En el video vas a ver» (cada punto está en el guion de la VSL).
+    cta: 'Ver cómo dar el primer paso',
+    video: [
+      'Por qué el primer paso se siente como una pared.',
+      'Qué cambia cuando ese paso es concreto y chico.',
+      'Cómo saber qué hacer cada día sin decidirlo desde cero.',
+    ],
     // Titular de la landing para este perfil (el de «atajo» es el de la landing tal cual).
     hero: {
       title: ['Dame 5 minutos y te muestro cómo', 'dar el primer paso en lo que venís postergando.'],
@@ -331,6 +346,13 @@ export const RESULTS = {
   racha: {
     name: 'Racha Frágil',
     descriptor: 'Empezás bien, pero el ritmo no se sostiene.',
+    // Botón del resultado y «En el video vas a ver» (cada punto está en el guion de la VSL).
+    cta: 'Ver cómo sostener lo que empezás',
+    video: [
+      'Por qué lo que empezás con ganas te dura una semana.',
+      'Cómo sostenerlo aunque tengas poca energía.',
+      'Cómo ver tu avance en números, en vez de adivinar.',
+    ],
     hero: {
       title: ['Dame 5 minutos y te muestro cómo', 'sostener lo que empezás.'],
       subtitle: 'No te falta voluntad. En 14 días, con 15 minutos por día, el método te da una estructura para sostener el ritmo.',

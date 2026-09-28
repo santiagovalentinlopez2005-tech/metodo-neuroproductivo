@@ -49,6 +49,9 @@ export const CONFIG = {
   result: {
     showEcho: false, // «Según tus respuestas, te pasa seguido que…» (repetía las viñetas de arriba)
     showCycle: false, // diagrama Distraerte · Arrancar · Sostener (ya se ve en la pausa)
+    showFirstStep: false, // «Por dónde empezar hoy» (un consejo gratis puede restarle ganas de ver el video)
+    showGoal: false, // «Lo que elegiste cambiar primero…» (se ve en la landing, debajo del video)
+    showDetails: false, // plegables «Cómo te ayuda el Método» y «Por qué suele pasar» (el porqué lo cuenta el video)
   },
 
   // Tamaño real de cada imagen (ancho, alto): reserva el espacio y evita saltos de diseño al cargar.

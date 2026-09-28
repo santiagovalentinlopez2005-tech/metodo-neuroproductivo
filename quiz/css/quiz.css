@@ -255,7 +255,20 @@ button {
 }
 
 .mnq-restart {
-  margin-top: 32px;
+  margin-top: 28px;
+  text-align: center;
+}
+
+/* «Repetir el test» como link chico: no compite con el botón del video. */
+.mnq-restart__link {
+  padding: 12px 16px;
+  background: none;
+  border: 0;
+  font: 500 14px/1.3 var(--font-b);
+  color: var(--gray-300);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 
 .mnq-btn:active {
@@ -486,11 +499,18 @@ button {
   display: block;
   width: 100%;
   height: auto;
-  /* Más baja para que «Cómo se suele ver» (lo que más convence) quede arriba. Se ve entera, centrada. */
-  max-height: min(190px, 24vh);
+  /* Chica para que «En el video vas a ver» quede a la vista sin bajar. Se ve entera, centrada. */
+  max-height: min(120px, 15vh);
   object-fit: contain;
   margin-top: 22px;
   border-radius: var(--r-card);
+}
+
+/* En pantallas bajas no entra: ahí manda el bloque del video. */
+@media (max-height: 700px) {
+  .mnq-result__art {
+    display: none;
+  }
 }
 
 .mnq-meter {
@@ -594,6 +614,43 @@ button {
   padding-left: 22px;
   line-height: 1.55;
   color: var(--gray-100);
+}
+
+/* «En el video vas a ver»: la razón para tocar el botón. Tarjeta dorada, arriba en el resultado. */
+.mnq-block.mnq-video {
+  padding: 18px 18px 16px;
+  background: linear-gradient(180deg, rgba(201, 151, 58, 0.14), rgba(201, 151, 58, 0.04));
+  border: 1px solid var(--gold-border);
+  border-radius: var(--r-card);
+}
+
+.mnq-video__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mnq-video__play {
+  position: relative;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.mnq-video__play::after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 10px;
+  border-style: solid;
+  border-width: 6px 0 6px 9px;
+  border-color: transparent transparent transparent var(--black);
+}
+
+.mnq-video .mnq-list li {
+  color: var(--white);
 }
 
 .mnq-list li::before {
