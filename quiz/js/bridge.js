@@ -44,6 +44,34 @@ function buildDetail(bridge) {
   );
 }
 
+// VSL: además del resultado, mide si la persona llega a tocar play y si mira un tramo del
+// video. Sirve para separar "no le interesó la VSL" de "nunca le dio play" (por ejemplo si la
+// landing está toda destapada y la gente se la salta). Usa los eventos reales que dispara el
+// reproductor de VTurb (la etiqueta <vturb-smartplayer>): `video:play` (se disparó recién con
+// un clic real, no con el autoplay mudo — verificado a mano en la página publicada) y
+// `video:timeupdate` (trae `detail.time` en segundos). `VslWatch60s` es una marca aproximada de
+// "miró un buen tramo"; no sabemos en qué segundo entra la oferta del video, así que no es el
+// momento exacto del pitch. Todo en su propio try/catch: si VTurb cambia el reproductor, esto
+// puede dejar de andar, pero no tiene que romper el resto de la página.
+function initVslTracking(base) {
+  try {
+    const player = document.querySelector('vturb-smartplayer');
+    if (!player) return;
+    player.addEventListener('video:play', () => track('vsl_play', base), { once: true });
+    let watched60 = false;
+    player.addEventListener('video:timeupdate', (event) => {
+      if (watched60) return;
+      const seconds = event && event.detail && event.detail.time;
+      if (typeof seconds === 'number' && seconds >= 60) {
+        watched60 = true;
+        track('vsl_watch_60s', base);
+      }
+    });
+  } catch {
+    /* si el reproductor cambia de API, que no rompa el resto de la pagina */
+  }
+}
+
 // Cambia el titular y el subtítulo del hero según el perfil del quiz. Si el perfil no define
 // `hero` (atajo), la página queda con el titular original de la landing.
 function applyHero(hero) {
@@ -83,6 +111,7 @@ function init() {
   if (shown) {
     track('bridge_view', { ...base, intensity: bridge.intensity || 'none', goal: bridge.goal || 'none' });
   }
+  initVslTracking(base);
   document.addEventListener(
     'click',
     (event) => {

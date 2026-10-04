@@ -19,6 +19,8 @@ export const EVENT_NAMES = {
   quiz_restart: 'QuizRestart', // agregado con el botón "Repetir el test" (no figuraba en la especificación)
   bridge_view: 'BridgeView',
   landing_cta_click: 'LandingCtaClick',
+  vsl_play: 'VslPlay', // agregado 2026-09-29: mide si tocó play, separado de si vio la VSL
+  vsl_watch_60s: 'VslWatch60s', // aproximado: min. 60s vistos, no el momento exacto de la oferta
 };
 
 function hasWindow() {
