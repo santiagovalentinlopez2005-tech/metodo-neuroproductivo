@@ -1495,6 +1495,27 @@ nav {
 
 .offer-cta { padding: 0 28px 28px; }
 
+/* ── ORDER BUMPS (casilleros opcionales debajo del botón; los arma /quiz/js/bumps.js) ── */
+.bumps { margin: 18px 0 4px; display: flex; flex-direction: column; gap: 10px; }
+.bumps-title { font-family: var(--font-h); font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--gold-light); margin: 0 0 2px; text-align: center; }
+.bumps-title span { color: var(--gray-500); font-weight: 500; text-transform: none; letter-spacing: 0; }
+.bump { position: relative; display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px dashed var(--gold-border); border-radius: 12px; background: rgba(201,151,58,0.05); cursor: pointer; transition: border-color .2s, background .2s; }
+.bump:hover { border-color: var(--gold); }
+.bump.on { border-style: solid; border-color: var(--gold); background: rgba(201,151,58,0.12); }
+.bump-input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.bump-input:focus-visible + .bump-box { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+.bump-box { flex: none; width: 22px; height: 22px; border: 2px solid var(--gold); border-radius: 6px; background: transparent; display: flex; align-items: center; justify-content: center; }
+.bump.on .bump-box { background: var(--gold); }
+.bump.on .bump-box::after { content: "✓"; color: #080808; font-size: 15px; font-weight: 800; line-height: 1; }
+.bump-img { flex: none; width: 56px; height: auto; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,.4); }
+.bump-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.bump-name { font-family: var(--font-h); font-size: 14px; color: var(--white); line-height: 1.25; }
+.bump-desc { font-size: 12.5px; color: var(--gray-300); line-height: 1.4; }
+.bump-price { flex: none; font-family: var(--font-h); font-weight: 700; font-size: 15px; color: var(--gold-light); white-space: nowrap; }
+.bumps-total { margin: 2px 0 0; text-align: center; font-family: var(--font-h); font-weight: 700; font-size: 15px; color: var(--white); min-height: 0; }
+.bumps-total:empty { display: none; }
+@media (max-width: 480px) { .bump { flex-wrap: wrap; } .bump-price { margin-left: 34px; } .bump-text { flex-basis: calc(100% - 130px); } }
+
 .offer-img {
   padding: 0;
   margin: 0 -40px 30px;
@@ -4112,5 +4133,6 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 </script>
 <script type="module" src="/quiz/js/bridge.js"></script>
+<script type="module" src="/quiz/js/bumps.js"></script>
 </body>
 </html>

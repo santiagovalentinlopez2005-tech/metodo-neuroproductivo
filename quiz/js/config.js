@@ -6,6 +6,27 @@ export const CONFIG = {
     landing: '/metodo-quiz',
   },
 
+  // Order bumps de la landing /metodo-quiz (hasta 2). Cada uno tiene que existir como producto en Shopify:
+  // pegá acá el ID numérico de su VARIANTE. Mientras `variantId` sea null el bump no se muestra.
+  // Los precios son los de Shopify; se usan solo para mostrar el total (el cobro lo hace el checkout).
+  bumpsBasePrice: 9500,
+  bumps: [
+    {
+      variantId: '67625610281039',
+      name: 'Sistema Anticaos Digital',
+      description: 'Limpiá tu celular y tu escritorio en 55 minutos para que enfocarte sea más fácil.',
+      price: 2490,
+      image: '/quiz/img/bump-anticaos.webp',
+    },
+    {
+      variantId: '67625660579919',
+      name: 'Protocolo de Reinicio',
+      description: '¿Fallaste un día y se volvió una semana? Volvé al método en 5 minutos, sin culpa y sin empezar de cero.',
+      price: 1990,
+      image: '/quiz/img/bump-reinicio.webp',
+    },
+  ],
+
   // [PENDIENTE] URL definitiva de la política de privacidad. Mientras sea null no se
   // muestra ningún enlace (no se inventa ninguna URL).
   privacyUrl: null,
