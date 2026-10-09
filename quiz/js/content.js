@@ -195,10 +195,13 @@ export const UI = {
   hook: {
     kicker: 'Método Neuroproductivo · Test rápido',
     title: 'Descubrí qué patrón te hace postergar',
-    scene: 'Te sentás a empezar y, de repente, estás en otra cosa.',
-    lead: '10 preguntas para ubicar dónde se te traba: al distraerte, al arrancar o al sostener.',
-    marks: ['Sin registro', 'Sin datos personales', 'Menos de 2 minutos'],
-    button: 'Empezar el test',
+    // Una sola bajada (escena + promesa). Los 3 resultados se muestran antes de empezar (resultsLabel).
+    lead: 'Te sentás a empezar y, de repente, estás en otra cosa. En 10 preguntas ubicamos dónde se te traba.',
+    resultsLabel: 'Tu resultado va a ser uno de estos tres:',
+    // Duración: ESTIMADA con las palabras de cada pantalla (≈1,8 min leyendo rápido, ≈2,4 medio, ≈3,4 lento).
+    // «Menos de 2 minutos» no se sostiene. Reemplazar por la mediana real (total_ms de QuizComplete / Clarity).
+    note: 'Unos 2 o 3 minutos · Sin registro ni datos personales',
+    button: 'Descubrir mi patrón',
     fineprint: 'Es una guía para conocerte mejor, no un diagnóstico.',
   },
   pause: {

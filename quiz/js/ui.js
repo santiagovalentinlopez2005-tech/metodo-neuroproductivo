@@ -1,7 +1,7 @@
 // Interfaz: dibuja la vista que emite el motor (hook, preguntas, pausa, entrada y resultado)
 // y traduce toques en llamadas al motor. Todo el texto entra como texto, nunca como HTML.
 
-import { FLOW, LIKERT_PROMPT, UI } from './content.js';
+import { FLOW, LIKERT_PROMPT, PATTERNS, RESULTS, UI } from './content.js';
 import { buildCycleDiagram } from './diagram.js';
 import { el, prefersReducedMotion } from './dom.js';
 import { buildResult } from './result.js';
@@ -41,16 +41,31 @@ export function mountUI({ root, engine, config }) {
       { class: 'mnq-screen mnq-hook' },
       el('p', { class: 'mnq-kicker', text: UI.hook.kicker }),
       el('h1', { class: 'mnq-title', tabindex: '-1', 'data-focus': '', text: UI.hook.title }),
-      el('p', { class: 'mnq-scene', text: UI.hook.scene }),
       el('p', { class: 'mnq-lead', text: UI.hook.lead }),
-      el('ul', { class: 'mnq-marks' }, UI.hook.marks.map((mark) => el('li', { text: mark }))),
-      config.images.hook
-        ? el('img', { class: 'mnq-hook__art', src: config.images.hook, alt: '', width: String(config.imageSizes.hook[0]), height: String(config.imageSizes.hook[1]), decoding: 'async' })
-        : null,
+      // Los 3 resultados posibles, a la vista antes de empezar (nombres e iconos del propio quiz).
+      el(
+        'section',
+        { class: 'mnq-outcomes', 'aria-label': UI.hook.resultsLabel },
+        el('p', { class: 'mnq-outcomes__label', text: UI.hook.resultsLabel }),
+        el(
+          'ul',
+          { class: 'mnq-outcomes__list' },
+          PATTERNS.map((p) => {
+            const icon = config.icons?.[p];
+            return el(
+              'li',
+              { class: 'mnq-outcome' },
+              icon ? el('img', { class: 'mnq-outcome__icon', src: icon.src, alt: '', width: String(icon.w), height: String(icon.h), decoding: 'async' }) : null,
+              el('span', { class: 'mnq-outcome__name', text: RESULTS[p].name }),
+            );
+          }),
+        ),
+      ),
       el(
         'div',
         { class: 'mnq-actions' },
         el('button', { class: 'mnq-btn mnq-btn--primary', type: 'button', text: UI.hook.button, onclick: () => engine.start() }),
+        el('p', { class: 'mnq-hook__note', text: UI.hook.note }),
         el('p', { class: 'mnq-fineprint', text: UI.hook.fineprint }),
       ),
     );
