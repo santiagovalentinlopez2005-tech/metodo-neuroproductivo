@@ -124,11 +124,17 @@ export function mountUI({ root, engine, config }) {
     group.append(...buttons);
 
     const icon = isLikert ? config.icons?.[question.dim] : null;
+    // Escala: ícono + frase van juntos en un bloque que se centra en el espacio libre (si no, en celulares altos
+    // queda un hueco entre la frase y las opciones, que están pegadas abajo para el pulgar).
     const heading = isLikert
       ? [
-          icon ? el('img', { class: 'mnq-dim-icon', src: icon.src, alt: '', width: String(icon.w), height: String(icon.h), decoding: 'async' }) : null,
-          el('p', { class: 'mnq-eyebrow', text: LIKERT_PROMPT }),
-          el('h2', { id: labelId, class: 'mnq-statement', tabindex: '-1', 'data-focus': '', text: question.statement }),
+          el(
+            'div',
+            { class: 'mnq-question__head' },
+            icon ? el('img', { class: 'mnq-dim-icon', src: icon.src, alt: '', width: String(icon.w), height: String(icon.h), decoding: 'async' }) : null,
+            el('p', { class: 'mnq-eyebrow', text: LIKERT_PROMPT }),
+            el('h2', { id: labelId, class: 'mnq-statement', tabindex: '-1', 'data-focus': '', text: question.statement }),
+          ),
         ]
       : [
           el('h2', { id: labelId, class: 'mnq-title mnq-title--question', tabindex: '-1', 'data-focus': '', text: view.title }),

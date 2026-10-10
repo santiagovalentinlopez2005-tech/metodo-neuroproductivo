@@ -357,6 +357,22 @@ button {
   padding-top: 28px;
 }
 
+/* Bloque ícono + frase: ocupa el espacio libre y se centra en él. */
+.mnq-question__head {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Pantallas altas: ícono más grande para llenar mejor. */
+@media (min-height: 760px) {
+  .mnq-question__head .mnq-dim-icon {
+    height: 84px;
+    margin-bottom: 18px;
+  }
+}
+
 .mnq-option {
   display: flex;
   align-items: center;
